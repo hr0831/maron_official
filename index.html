@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MARON Official Website | まろん公式サイト</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;500;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    <style>
+        /* 全体設定 */
+        :root {
+            --bg-color: #fdfdfd;
+            --text-color: #333;
+            --accent-color: #8b4513; /* マズルをイメージした深い茶色 */
+            --gray-light: #f4f4f4;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* ナビゲーション */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            padding: 20px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        .nav-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        nav ul {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        nav a:hover {
+            color: var(--accent-color);
+        }
+
+        /* 共通セクション設定 */
+        section {
+            padding: 120px 40px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .content-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            margin-bottom: 30px;
+            line-height: 1.1;
+        }
+
+        .sub-title {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 10px;
+            letter-spacing: 3px;
+        }
+
+        /* 各セクション固有のデザイン */
+        
+        /* 1. TOP (Hero) */
+        #top {
+            justify-content: center;
+            text-align: center;
+        }
+
+        .hero-img-container {
+            position: relative;
+            margin-bottom: 40px;
+        }
+
+        .hero-img {
+            width: 320px;
+            height: 320px;
+            object-fit: cover;
+            border-radius: 50%;
+            filter: grayscale(100%);
+            transition: 1.5s ease;
+        }
+
+        #top:hover .hero-img {
+            filter: grayscale(0%);
+        }
+
+        .hero-title {
+            font-size: 5rem;
+            letter-spacing: 10px;
+        }
+
+        /* 2. PROFILE */
+        .profile-img {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .data-list {
+            margin-top: 30px;
+        }
+
+        .data-item {
+            margin-bottom: 15px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+
+        .data-label {
+            font-weight: bold;
+            width: 100px;
+            display: inline-block;
+        }
+
+        /* 3. SKILLS & CHARM */
+        #skills { background-color: #fff; }
+        .muzzle-img {
+            width: 100%;
+            border-radius: 4px;
+            box-shadow: 20px 20px 0 var(--gray-light);
+        }
+
+        /* 4. EPISODE */
+        #episode { background-color: var(--gray-light); min-width: 100vw; }
+        .episode-card {
+            background: white;
+            padding: 60px;
+            border-radius: 2px;
+        }
+
+        /* フッター */
+        footer {
+            text-align: center;
+            padding: 60px 0;
+            font-size: 0.8rem;
+            color: #999;
+            letter-spacing: 1px;
+        }
+
+        /* レスポンシブ (スマホ対応) */
+        @media (max-width: 768px) {
+            .content-wrapper { grid-template-columns: 1fr; gap: 40px; }
+            h2 { font-size: 2.5rem; }
+            .hero-title { font-size: 3rem; }
+            nav .container { padding: 0 20px; }
+            nav ul { display: none; } /* スマホではシンプルに */
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="container">
+            <div class="nav-logo">MARON</div>
+            <ul>
+                <li><a href="#top">Top</a></li>
+                <li><a href="#profile">Profile</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#episode">Episode</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section id="top">
+        <div>
+            <div class="hero-img-container">
+                <img src="Image.jpg" alt="Maron Hero" class="hero-img">
+            </div>
+            <span class="sub-title">OFFICIAL WEBSITE</span>
+            <h1 class="hero-title">MARON</h1>
+            <p>Handsome & Delicate Dog.</p>
+        </div>
+    </section>
+
+    <section id="profile">
+        <div class="content-wrapper">
+            <img src="Image (1).jpg" alt="Maron Profile" class="profile-img">
+            <div>
+                <span class="sub-title">WHO IS HE?</span>
+                <h2>Profile</h2>
+                <p>かっこよさとかわいさを兼ね備えた唯一無二のわんこ。13年という歳月を共に歩んできた、家族の宝物です。</p>
+                
+                <div class="data-list">
+                    <div class="data-item"><span class="data-label">名前</span> まろん</div>
+                    <div class="data-item"><span class="data-label">犬種</span> 雑種（Mix）</div>
+                    <div class="data-item"><span class="data-label">性別</span> オス</div>
+                    <div class="data-item"><span class="data-label">年齢</span> 推定13歳</div>
+                    <div class="data-item"><span class="data-label">肩書き</span> ビビりで繊細な鬼吠えボーイ</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="skills">
+        <div class="content-wrapper">
+            <div>
+                <span class="sub-title">CHARACTERISTICS</span>
+                <h2>Charm & Skills</h2>
+                <p><strong>チャームポイント：</strong> 凛とした表情を引き締める「黒いマズル」。</p>
+                <br>
+                <p><strong>特技：</strong></p>
+                <ul>
+                    <li>番犬（家族に対しても職務を全うする誠実さ）</li>
+                    <li>リンゴとバナナの超人的な察知能力</li>
+                </ul>
+                <br>
+                <p><strong>好きな食べ物：</strong> リンゴ、バナナ、そして「人間が食べているものすべて」。</p>
+            </div>
+            <img src="Image (4).jpg" alt="Maron Muzzle" class="muzzle-img">
+        </div>
+    </section>
+
+    <section id="episode">
+        <div class="content-wrapper" style="max-width: 1000px; margin: 0 auto;">
+            <img src="Image (2).jpg" alt="Maron Life" style="width: 100%; border-radius: 4px;">
+            <div class="episode-card">
+                <span class="sub-title">STORY</span>
+                <h2>Episode</h2>
+                <p>
+                    「ただいま」と扉を開けると、面倒くさそうな顔をしながらも、ゆっくりと尻尾を振ってくれる。
+                    たまに気分が乗らないと来てくれないこともあるけれど、それも彼らしさ。
+                </p>
+                <br>
+                <p>
+                    唸りながらもお腹を見せて甘えるその姿は、究極の信頼の証。
+                    少し「怖い顔」をしながら甘える、不器用で愛おしい日常がここにあります。
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 MARON THE DOG. ALL RIGHTS RESERVED.</p>
+    </footer>
+
+</body>
+</html>
