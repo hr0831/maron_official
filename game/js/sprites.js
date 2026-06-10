@@ -34,7 +34,7 @@ function flipped(img) {
 // ---- 主人公: 犬の「まろん」 ----
 const DOG_PAL = {
     K: '#1a1208', B: '#a05a2c', D: '#6b3a14', W: '#ffffff',
-    R: '#d62828', P: '#2a1a0a', G: '#222222',
+    R: '#d62828', P: '#5a3218', G: '#222222',
 };
 // ファイアまろん (白毛 + 赤バンダナ)
 const DOG_FIRE_PAL = { ...DOG_PAL, B: '#f5f0e8', D: '#cfc5b5', P: '#ffd9a0' };
