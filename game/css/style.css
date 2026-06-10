@@ -1,0 +1,93 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    background: #1a1a2e;
+    overflow: hidden;
+    font-family: 'Noto Sans JP', sans-serif;
+    touch-action: none;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+#game-wrap {
+    position: relative;
+    width: min(96vw, calc(96vh * 960 / 544 - 60px));
+    aspect-ratio: 960 / 544;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+#game {
+    width: 100%;
+    height: 100%;
+    display: block;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    background: #5c94fc;
+}
+
+#help {
+    color: #8888aa;
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-align: center;
+    padding: 0 10px;
+}
+
+/* ---- タッチ操作 (タッチデバイスのみ表示) ---- */
+#touch-controls {
+    display: none;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+@media (pointer: coarse) {
+    #touch-controls {
+        display: block;
+    }
+}
+
+.tc-group {
+    position: absolute;
+    bottom: 12px;
+    display: flex;
+    gap: 14px;
+    pointer-events: auto;
+}
+
+.tc-left  { left: 14px; }
+.tc-right { right: 14px; }
+
+.tc-btn {
+    width: 64px;
+    height: 64px;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.30);
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 22px;
+    font-weight: bold;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: none;
+}
+
+.tc-round { border-radius: 50%; }
+
+.tc-btn:active {
+    background: rgba(255, 255, 255, 0.35);
+}

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>SUPER MARON WORLD | まろんの大冒険</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="game-wrap">
+        <canvas id="game" width="960" height="544"></canvas>
+        <div id="touch-controls">
+            <div class="tc-group tc-left">
+                <button class="tc-btn" id="tc-left">◀</button>
+                <button class="tc-btn" id="tc-right">▶</button>
+            </div>
+            <div class="tc-group tc-right">
+                <button class="tc-btn tc-round" id="tc-run">B</button>
+                <button class="tc-btn tc-round" id="tc-jump">A</button>
+            </div>
+        </div>
+    </div>
+    <p id="help">
+        ←→ / A・D:移動&emsp;Z / SPACE:ジャンプ&emsp;X / SHIFT:ダッシュ・ファイア&emsp;ENTER:スタート / ポーズ&emsp;M:サウンド ON/OFF
+    </p>
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
