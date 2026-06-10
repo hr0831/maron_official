@@ -54,30 +54,35 @@ body {
     padding: 0 10px;
 }
 
-/* ---- タッチ操作 (タッチデバイスのみ表示) ---- */
+/* ---- タッチ操作 (タッチデバイスのみ、ゲーム画面の下に表示) ---- */
 #touch-controls {
     display: none;
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
+    width: min(96vw, calc(96vh * 960 / 544 - 60px));
+    justify-content: space-between;
+    align-items: center;
 }
 
 @media (pointer: coarse) {
     #touch-controls {
-        display: block;
+        display: flex;
+    }
+
+    /* ボタンの分の高さを確保してはみ出しを防ぐ */
+    #game-wrap,
+    #touch-controls {
+        width: min(96vw, calc((100vh - 130px) * 960 / 544));
+    }
+
+    /* スマホではキーボード説明は不要 */
+    #help {
+        display: none;
     }
 }
 
 .tc-group {
-    position: absolute;
-    bottom: 12px;
     display: flex;
-    gap: 14px;
-    pointer-events: auto;
+    gap: 16px;
 }
-
-.tc-left  { left: 14px; }
-.tc-right { right: 14px; }
 
 .tc-btn {
     width: 64px;
@@ -104,15 +109,15 @@ body {
 <body>
     <div id="game-wrap">
         <canvas id="game" width="960" height="544"></canvas>
-        <div id="touch-controls">
-            <div class="tc-group tc-left">
-                <button class="tc-btn" id="tc-left">◀</button>
-                <button class="tc-btn" id="tc-right">▶</button>
-            </div>
-            <div class="tc-group tc-right">
-                <button class="tc-btn tc-round" id="tc-run">B</button>
-                <button class="tc-btn tc-round" id="tc-jump">A</button>
-            </div>
+    </div>
+    <div id="touch-controls">
+        <div class="tc-group">
+            <button class="tc-btn" id="tc-left">◀</button>
+            <button class="tc-btn" id="tc-right">▶</button>
+        </div>
+        <div class="tc-group">
+            <button class="tc-btn tc-round" id="tc-run">B</button>
+            <button class="tc-btn tc-round" id="tc-jump">A</button>
         </div>
     </div>
     <p id="help">
