@@ -6,14 +6,25 @@
 
 ## 遊び方
 
-`game/index.html` をブラウザで開くだけで遊べます。
-ローカルファイルの ES Modules 制限があるブラウザでは、簡易サーバー経由で開いてください:
+### かんたん: 単一ファイル版 (ダブルクリックでOK)
+
+**`game/play.html`** をブラウザで開くだけで遊べます。すべてのコードを1つの
+HTML に埋め込んであるので、ファイルをダウンロードしてダブルクリックするだけで動きます。
+
+### 開発版 (モジュール構成)
+
+`game/index.html` は ES Modules 構成のため、`file://` で直接開くと
+ブラウザのセキュリティ制限で読み込めません (画面が真っ青のまま)。
+簡易サーバー経由で開いてください:
 
 ```bash
 cd maron_official
 python3 -m http.server 8000
 # → http://localhost:8000/game/ を開く
 ```
+
+> `play.html` は `node game/tools/build-standalone.mjs` で
+> モジュール構成から自動生成しています。
 
 ## 操作方法
 
