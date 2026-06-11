@@ -34,6 +34,7 @@ export default {
         b.enemy('kuri', 36);
         b.enemy('kuri', 43);
         b.enemy('kame', 53);
+        b.enemy('kiiro', 58);
         b.coins(50, 53, 10);
 
         // 最初の谷 (70-72) の先
@@ -48,6 +49,7 @@ export default {
         b.bricks(94, 98, 11);
         b.coins(94, 98, 7);
         b.q(104, 11, 'power');
+        b.enemy('osushi', 102);
         b.enemy('kuri', 100);
         b.enemy('kuri', 107);
         b.enemy('kuri', 110);
@@ -57,6 +59,7 @@ export default {
         b.stairsDown(122, 4);
         b.enemy('kame', 128);
         b.pipe(132, 2);
+        b.enemy('kiiro', 137);
         b.coins(136, 140, 9);
 
         // ゴール前ラッシュ

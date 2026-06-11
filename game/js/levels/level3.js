@@ -25,6 +25,7 @@ export default {
         // 小島 1
         b.ground(38, 48);
         b.q(43, 11, 'power');
+        b.enemy('kiiro', 41);
         b.enemy('kuri', 44);
         b.enemy('kuri', 46);
 
@@ -66,6 +67,7 @@ export default {
         b.ground(136, 150);
         b.stairsUp(140, 3);
         b.enemy('kame', 146);
+        b.enemy('osushi', 143);
         b.enemy('kuri', 148);
         b.q(144, 8, 'coin');
 
@@ -76,6 +78,7 @@ export default {
 
         // ゴール大陸
         b.ground(166, 197);
+        b.enemy('kiiro', 171);
         b.goal(184);
     },
 };

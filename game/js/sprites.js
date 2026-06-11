@@ -231,10 +231,99 @@ const FLOWER = [
     '................',
 ];
 
+// ---- 敵: きいろちゃん (金色ハムスター・ぴょんぴょん跳ねる) ----
+const KIIRO_PAL = { K: '#1a1208', Y: '#e8c060', L: '#f8eed4', P: '#f0a8b8' };
+const KIIRO_1 = [
+    '...KK......KK...',
+    '..KPYK....KYPK..',
+    '..KYYKKKKKKYYK..',
+    '.KYYYYYYYYYYYYK.',
+    '.KYYYYYYYYYYYYK.',
+    'KYYKKYYYYYYKKYYK',
+    'KYYKKYYYYYYKKYYK',
+    'KYYYYYYPPYYYYYYK',
+    'KYLLLYYYYYYLLLYK',
+    'KYLLLLLYYLLLLLYK',
+    'KYLLLLLLLLLLLLYK',
+    '.KYLLLLLLLLLLYK.',
+    '..KKLLLLLLLLKK..',
+    '...KPPK..KPPK...',
+    '...KPPK..KPPK...',
+    '...KKK....KKK...',
+];
+const KIIRO_2 = [
+    ...KIIRO_1.slice(0, 13),
+    '....KPPKKPPK....',
+    '....KPPKKPPK....',
+    '....KKK..KKK....',
+];
+const KIIRO_FLAT = [
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+    '.....KKKKKK.....',
+    '...KKYYYYYYKK...',
+    '.KKYYKKYYKKYYKK.',
+    'KYYLLLLLLLLLLYYK',
+    'KPPPPPPPPPPPPPPK',
+    '.KKKKKKKKKKKKKK.',
+];
+
+// ---- 敵: おすしちゃん (白ハムスター・ハートクッキー持ちでちょこちょこ走る) ----
+const OSUSHI_PAL = { K: '#1a1208', W: '#f6f3ee', P: '#f0a8b8', C: '#e0b888', R: '#e03030', G: '#d8d4cc' };
+const OSUSHI_1 = [
+    '...KK......KK...',
+    '..KPWK....KWPK..',
+    '..KWWKKKKKKWWK..',
+    '.KWWWWWWWWWWWWK.',
+    '.KWWWWWWWWWWWWK.',
+    'KWWKKWWWWWWKKWWK',
+    'KWWKKWWWWWWKKWWK',
+    'KWWWWWWPPWWWWWWK',
+    'KWWWWWCCCCWWWWWK',
+    'KWWWWWCRRCWWWWWK',
+    'KWWWWWCCCCWWWWWK',
+    '.KWWWWWWWWWWWWK.',
+    '..KKWWWWWWWWKK..',
+    '...KPPK..KPPK...',
+    '...KPPK..KPPK...',
+    '...KKK....KKK...',
+];
+const OSUSHI_2 = [
+    ...OSUSHI_1.slice(0, 13),
+    '....KPPKKPPK....',
+    '....KPPKKPPK....',
+    '....KKK..KKK....',
+];
+const OSUSHI_FLAT = [
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+    '.....KKKKKK.....',
+    '...KKWWWWWWKK...',
+    '.KKWWKKWWKKWWKK.',
+    'KWWGGGGGGGGGGWWK',
+    'KPPPPPPPPPPPPPPK',
+    '.KKKKKKKKKKKKKK.',
+];
+
 function build() {
     const dogSmallPal = DOG_PAL, dogFirePal = DOG_FIRE_PAL;
-    const make = (img) => ({ right: img, left: flipped(img) });
-    return {
+    const make = (img) => ({ right: img, left: flipped(img) });    return {
         dog: {
             small: {
                 idle: make(dogSmall(LEGS_IDLE, dogSmallPal)),
@@ -261,6 +350,12 @@ function build() {
         kame1: make(px(KAME_1, KAME_PAL)),
         kame2: make(px(KAME_2, KAME_PAL)),
         shell: make(px(SHELL, KAME_PAL)),
+        kiiro1: make(px(KIIRO_1, KIIRO_PAL)),
+        kiiro2: make(px(KIIRO_2, KIIRO_PAL)),
+        kiiroFlat: make(px(KIIRO_FLAT, KIIRO_PAL)),
+        osushi1: make(px(OSUSHI_1, OSUSHI_PAL)),
+        osushi2: make(px(OSUSHI_2, OSUSHI_PAL)),
+        osushiFlat: make(px(OSUSHI_FLAT, OSUSHI_PAL)),
         mushroom: px(MUSHROOM, ITEM_PAL),
         oneup: px(MUSHROOM, ONEUP_PAL),
         flower: px(FLOWER, ITEM_PAL),

@@ -241,7 +241,7 @@ class Game {
                 e.active = e.x < this.camera.x + this.camera.viewW + 64;
                 continue;
             }
-            e.update(dt, this.level);
+            e.update(dt, this.level, p);
             if (e.removed || !e.alive || p.dead) continue;
             if (!this.overlap(p, e)) continue;
 
