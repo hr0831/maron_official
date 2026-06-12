@@ -1,7 +1,7 @@
-// WORLD 1-1: はじまりの草原
+// WORLD 1-1: まろんのオフィス大冒険
 export default {
     name: 'WORLD 1-1',
-    theme: 'overworld',
+    theme: 'office',
     music: 'overworld',
     width: 184,
     time: 300,
@@ -11,10 +11,10 @@ export default {
         b.ground(73, 86);
         b.ground(90, 183);
 
-        // 背景の装飾
-        for (let x = 6; x < 180; x += 22) b.decor('cloud', x, (x % 3));
-        for (let x = 2; x < 180; x += 38) b.decor('hill', x);
-        for (let x = 11; x < 180; x += 27) b.decor('bush', x);
+        // 背景の装飾 (窓・壁掛け時計・観葉植物)
+        for (let x = 7; x < 180; x += 13) b.decor('window', x, (x % 2));
+        for (let x = 21; x < 180; x += 39) b.decor('clock', x);
+        for (const x of [12, 30, 45, 62, 78, 95, 112, 124, 140, 158]) b.decor('plant', x);
 
         // 最初のブロック地帯 (きいろちゃんとおすしちゃんがお出迎え)
         b.enemy('osushi', 14);
