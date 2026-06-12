@@ -350,6 +350,61 @@ const LULU_2 = [
     '....KKK..KKK....',
 ];
 
+// ---- ボス: ゆいちゃん (ボブヘアの女の子) ----
+const YUI_PAL = { K: '#1a1208', H: '#4a3320', S: '#ffd9b8', R: '#e86890', W: '#ffffff', M: '#d04060' };
+const YUI_TOP = [
+    '......KKKKKKKKKKKK......',
+    '....KKHHHHHHHHHHHHKK....',
+    '...KHHHHHHHHHHHHHHHHK...',
+    '..KHHHHHHHHHHHHHHHHHHK..',
+    '..KHHHHHHHHHHHHHHHHHHK..',
+    '.KHHHHHHHHHHHHHHHHHHHHK.',
+    '.KHHHKSSSSSSSSSSSSKHHHK.',
+    '.KHHKSSSSSSSSSSSSSSKHHK.',
+];
+const YUI_EYES_OPEN = [
+    '.KHHKSSKKSSSSSSKKSSKHHK.',
+    '.KHHKSSKKSSSSSSKKSSKHHK.',
+];
+const YUI_EYES_CLOSED = [
+    '.KHHKSSSSSSSSSSSSSSKHHK.',
+    '.KHHKSSKKSSSSSSKKSSKHHK.',
+];
+const YUI_MID = [
+    '.KHHKSSSSSSSSSSSSSSKHHK.',
+    '.KHHKSSSSKMMMMKSSSSKHHK.',
+    '.KHHHKSSSSSSSSSSSSKHHHK.',
+    '.KHHHHKSSSSSSSSSSKHHHHK.',
+    '..KHHHHKKKKKKKKKKHHHHK..',
+    '..KKHHHHHHHHHHHHHHHHKK..',
+    '....KKKKRRRRRRRRKKKK....',
+    '...KSSKRRRRRRRRRRKSSK...',
+    '..KSSKRRRRRRRRRRRRKSSK..',
+    '..KSSKRRRRRRRRRRRRKSSK..',
+    '..KKKRRRRRRRRRRRRRRKKK..',
+    '....KRRRRRRRRRRRRRRK....',
+    '...KRRRRRRRRRRRRRRRRK...',
+    '...KRRRRRRRRRRRRRRRRK...',
+    '...KKKKKKKKKKKKKKKKKK...',
+];
+const YUI_LEGS_1 = [
+    '.....KSSK......KSSK.....',
+    '.....KSSK......KSSK.....',
+    '.....KSSK......KSSK.....',
+    '....KWWWK......KWWWK....',
+    '....KKKKK......KKKKK....',
+];
+const YUI_LEGS_2 = [
+    '....KSSK........KSSK....',
+    '...KSSK..........KSSK...',
+    '...KSSK..........KSSK...',
+    '..KWWWK..........KWWWK..',
+    '..KKKKK..........KKKKK..',
+];
+const YUI_1 = [...YUI_TOP, ...YUI_EYES_OPEN, ...YUI_MID, ...YUI_LEGS_1];
+const YUI_2 = [...YUI_TOP, ...YUI_EYES_OPEN, ...YUI_MID, ...YUI_LEGS_2];
+const YUI_DIZZY = [...YUI_TOP, ...YUI_EYES_CLOSED, ...YUI_MID, ...YUI_LEGS_1];
+
 function build() {
     const dogSmallPal = DOG_PAL, dogFirePal = DOG_FIRE_PAL;
     const make = (img) => ({ right: img, left: flipped(img) });    return {
@@ -387,6 +442,9 @@ function build() {
         osushiFlat: make(px(OSUSHI_FLAT, OSUSHI_PAL)),
         lulu1: make(px(LULU_1, LULU_PAL)),
         lulu2: make(px(LULU_2, LULU_PAL)),
+        yui1: make(px(YUI_1, YUI_PAL)),
+        yui2: make(px(YUI_2, YUI_PAL)),
+        yuiDizzy: make(px(YUI_DIZZY, YUI_PAL)),
         mushroom: px(MUSHROOM, ITEM_PAL),
         oneup: px(MUSHROOM, ONEUP_PAL),
         flower: px(FLOWER, ITEM_PAL),
@@ -695,6 +753,19 @@ export function drawElevator(c, x, baseY) {
     c.textAlign = 'center';
     c.textBaseline = 'middle';
     c.fillText('EXIT', x + w / 2, baseY - h - 15);
+}
+
+export function drawHeart(c, x, y, size = 8, color = '#ff5a8a') {
+    c.fillStyle = color;
+    c.beginPath();
+    c.arc(x - size * 0.35, y - size * 0.25, size * 0.42, 0, Math.PI * 2);
+    c.arc(x + size * 0.35, y - size * 0.25, size * 0.42, 0, Math.PI * 2);
+    c.fill();
+    c.beginPath();
+    c.moveTo(x - size * 0.72, y - size * 0.05);
+    c.lineTo(x, y + size * 0.7);
+    c.lineTo(x + size * 0.72, y - size * 0.05);
+    c.fill();
 }
 
 export function drawFlag(c, poleX, y) {

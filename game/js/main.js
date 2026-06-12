@@ -3,7 +3,7 @@ import { Sound } from './audio.js';
 import { Level, T, TS, GROUND_Y } from './level.js';
 import { Camera } from './camera.js';
 import { Player } from './entities/player.js';
-import { createEnemy, Kame } from './entities/enemies.js';
+import { createEnemy, Kame, HeartShot } from './entities/enemies.js';
 import { CoinPop, Mushroom, Flower, Fireball, ScorePopup } from './entities/items.js';
 import { Particles } from './entities/particles.js';
 import { HUD } from './hud.js';
@@ -131,7 +131,7 @@ class Game {
         }
         // 叩いたブロックの上に乗っている敵を倒す
         for (const e of this.enemies) {
-            if (!e.alive || e.flipped) continue;
+            if (!e.alive || e.flipped || e.boss) continue;
             const onTop = Math.abs(e.y + e.h - row * TS) < 6 &&
                 e.x + e.w > col * TS - 4 && e.x < (col + 1) * TS + 4;
             if (onTop) {
@@ -183,6 +183,28 @@ class Game {
                 break;
             case 'clear':
                 this.particles.update(dt);
+                this.stateTimer -= dt;
+                if (this.stateTimer <= 0) {
+                    if (this.levelIndex + 1 < LEVELS.length) this.loadLevel(this.levelIndex + 1);
+                    else {
+                        this.state = 'win';
+                        this.stateTimer = 0;
+                        this.saveBest();
+                    }
+                }
+                break;
+            case 'bossclear':
+                // ボス撃破演出: ゆいちゃんは目を回し、花火が上がる
+                for (const e of this.enemies) {
+                    if (e.boss) e.update(dt, this.level, this.player, this);
+                }
+                this.particles.update(dt);
+                this.popups.forEach((s) => s.update(dt));
+                this.popups = this.popups.filter((s) => !s.removed);
+                if (Math.random() < 0.04) {
+                    this.particles.firework(
+                        this.camera.x + 150 + Math.random() * 660, 60 + Math.random() * 180);
+                }
                 this.stateTimer -= dt;
                 if (this.stateTimer <= 0) {
                     if (this.levelIndex + 1 < LEVELS.length) this.loadLevel(this.levelIndex + 1);
@@ -300,7 +322,8 @@ class Game {
                 if (!e.alive || e.flipped || !e.active || f.removed) continue;
                 if (this.overlap(f, e)) {
                     f.removed = true;
-                    e.flip(this, Math.sign(f.vx) || 1);
+                    if (e.hitByFireball) e.hitByFireball(this);
+                    else e.flip(this, Math.sign(f.vx) || 1);
                     this.particles.sparkle(e.x + e.w / 2, e.y + e.h / 2, '#ff9f1c');
                     this.sound.kick();
                 }
@@ -334,9 +357,17 @@ class Game {
         }
 
         // ゴールの旗に到達
-        if (p.x + p.w >= this.level.flagX * TS + 12 && !p.dead) {
+        if (!this.level.bossLevel && p.x + p.w >= this.level.flagX * TS + 12 && !p.dead) {
             this.startFlag();
         }
+    }
+
+    onBossDefeated() {
+        // 飛んでいるハートを消して勝利演出へ
+        this.enemies = this.enemies.filter((e) => !(e instanceof HeartShot));
+        this.state = 'bossclear';
+        this.stateTimer = 5;
+        this.sound.clear();
     }
 
     startDeath() {
@@ -451,13 +482,15 @@ class Game {
             if (d.kind === 'plant') drawPlant(c, d.x - camX, groundLine);
         }
 
-        // 城と旗
-        if (level.theme === 'office') drawElevator(c, level.castleX * TS - camX, groundLine);
-        else drawCastle(c, level.castleX * TS - camX, groundLine);
-        const flagBaseY = this.state === 'flag' || this.state === 'clearwalk' || this.state === 'clear' || this.flagDone
-            ? (this.flagY ?? (GROUND_Y - 10) * TS)
-            : (GROUND_Y - 11) * TS + 16;
-        drawFlag(c, level.flagX * TS + TS / 2 - 3 - camX, flagBaseY);
+        // 城と旗 (ボス面にはなし)
+        if (!level.bossLevel) {
+            if (level.theme === 'office') drawElevator(c, level.castleX * TS - camX, groundLine);
+            else drawCastle(c, level.castleX * TS - camX, groundLine);
+            const flagBaseY = this.state === 'flag' || this.state === 'clearwalk' || this.state === 'clear' || this.flagDone
+                ? (this.flagY ?? (GROUND_Y - 10) * TS)
+                : (GROUND_Y - 11) * TS + 16;
+            drawFlag(c, level.flagX * TS + TS / 2 - 3 - camX, flagBaseY);
+        }
 
         // ブロックからせり上がり中のアイテムはタイルの後ろに描く
         for (const it of this.items) {
@@ -498,6 +531,9 @@ class Game {
             // 最終面クリアの瞬間は何も出さない (win 画面へ)
         } else if (this.state === 'clear') {
             this.overlayText(c, 'COURSE CLEAR!', 'タイムボーナス獲得!');
+        }
+        if (this.state === 'bossclear') {
+            this.overlayText(c, '🎀 なかなおり! 🎀', 'ゆいちゃんと なかよくなった!');
         }
         if (this.state === 'win') {
             this.overlayText(c, '🎉 ALL CLEAR! 🎉',
