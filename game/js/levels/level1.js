@@ -16,7 +16,9 @@ export default {
         for (let x = 2; x < 180; x += 38) b.decor('hill', x);
         for (let x = 11; x < 180; x += 27) b.decor('bush', x);
 
-        // 最初のブロック地帯
+        // 最初のブロック地帯 (きいろちゃんとおすしちゃんがお出迎え)
+        b.enemy('osushi', 14);
+        b.enemy('kiiro', 19);
         b.q(16, 11, 'coin');
         b.brick(21, 11);
         b.q(22, 11, 'power');
