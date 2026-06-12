@@ -223,6 +223,7 @@ class Level {
         this.music = data.music || 'overworld';
         this.width = data.width;
         this.time = data.time || 300;
+        this.bossLevel = !!data.boss;
         this.grid = new Uint8Array(this.width * ROWS);
         this.contents = new Map();
         this.spawns = [];
@@ -669,6 +670,61 @@ const LULU_2 = [
     '....KKK..KKK....',
 ];
 
+// ---- ボス: ゆいちゃん (ボブヘアの女の子) ----
+const YUI_PAL = { K: '#1a1208', H: '#4a3320', S: '#ffd9b8', R: '#e86890', W: '#ffffff', M: '#d04060' };
+const YUI_TOP = [
+    '......KKKKKKKKKKKK......',
+    '....KKHHHHHHHHHHHHKK....',
+    '...KHHHHHHHHHHHHHHHHK...',
+    '..KHHHHHHHHHHHHHHHHHHK..',
+    '..KHHHHHHHHHHHHHHHHHHK..',
+    '.KHHHHHHHHHHHHHHHHHHHHK.',
+    '.KHHHKSSSSSSSSSSSSKHHHK.',
+    '.KHHKSSSSSSSSSSSSSSKHHK.',
+];
+const YUI_EYES_OPEN = [
+    '.KHHKSSKKSSSSSSKKSSKHHK.',
+    '.KHHKSSKKSSSSSSKKSSKHHK.',
+];
+const YUI_EYES_CLOSED = [
+    '.KHHKSSSSSSSSSSSSSSKHHK.',
+    '.KHHKSSKKSSSSSSKKSSKHHK.',
+];
+const YUI_MID = [
+    '.KHHKSSSSSSSSSSSSSSKHHK.',
+    '.KHHKSSSSKMMMMKSSSSKHHK.',
+    '.KHHHKSSSSSSSSSSSSKHHHK.',
+    '.KHHHHKSSSSSSSSSSKHHHHK.',
+    '..KHHHHKKKKKKKKKKHHHHK..',
+    '..KKHHHHHHHHHHHHHHHHKK..',
+    '....KKKKRRRRRRRRKKKK....',
+    '...KSSKRRRRRRRRRRKSSK...',
+    '..KSSKRRRRRRRRRRRRKSSK..',
+    '..KSSKRRRRRRRRRRRRKSSK..',
+    '..KKKRRRRRRRRRRRRRRKKK..',
+    '....KRRRRRRRRRRRRRRK....',
+    '...KRRRRRRRRRRRRRRRRK...',
+    '...KRRRRRRRRRRRRRRRRK...',
+    '...KKKKKKKKKKKKKKKKKK...',
+];
+const YUI_LEGS_1 = [
+    '.....KSSK......KSSK.....',
+    '.....KSSK......KSSK.....',
+    '.....KSSK......KSSK.....',
+    '....KWWWK......KWWWK....',
+    '....KKKKK......KKKKK....',
+];
+const YUI_LEGS_2 = [
+    '....KSSK........KSSK....',
+    '...KSSK..........KSSK...',
+    '...KSSK..........KSSK...',
+    '..KWWWK..........KWWWK..',
+    '..KKKKK..........KKKKK..',
+];
+const YUI_1 = [...YUI_TOP, ...YUI_EYES_OPEN, ...YUI_MID, ...YUI_LEGS_1];
+const YUI_2 = [...YUI_TOP, ...YUI_EYES_OPEN, ...YUI_MID, ...YUI_LEGS_2];
+const YUI_DIZZY = [...YUI_TOP, ...YUI_EYES_CLOSED, ...YUI_MID, ...YUI_LEGS_1];
+
 function build() {
     const dogSmallPal = DOG_PAL, dogFirePal = DOG_FIRE_PAL;
     const make = (img) => ({ right: img, left: flipped(img) });    return {
@@ -706,6 +762,9 @@ function build() {
         osushiFlat: make(px(OSUSHI_FLAT, OSUSHI_PAL)),
         lulu1: make(px(LULU_1, LULU_PAL)),
         lulu2: make(px(LULU_2, LULU_PAL)),
+        yui1: make(px(YUI_1, YUI_PAL)),
+        yui2: make(px(YUI_2, YUI_PAL)),
+        yuiDizzy: make(px(YUI_DIZZY, YUI_PAL)),
         mushroom: px(MUSHROOM, ITEM_PAL),
         oneup: px(MUSHROOM, ONEUP_PAL),
         flower: px(FLOWER, ITEM_PAL),
@@ -1013,6 +1072,19 @@ function drawElevator(c, x, baseY) {
     c.textAlign = 'center';
     c.textBaseline = 'middle';
     c.fillText('EXIT', x + w / 2, baseY - h - 15);
+}
+
+function drawHeart(c, x, y, size = 8, color = '#ff5a8a') {
+    c.fillStyle = color;
+    c.beginPath();
+    c.arc(x - size * 0.35, y - size * 0.25, size * 0.42, 0, Math.PI * 2);
+    c.arc(x + size * 0.35, y - size * 0.25, size * 0.42, 0, Math.PI * 2);
+    c.fill();
+    c.beginPath();
+    c.moveTo(x - size * 0.72, y - size * 0.05);
+    c.lineTo(x, y + size * 0.7);
+    c.lineTo(x + size * 0.72, y - size * 0.05);
+    c.fill();
 }
 
 function drawFlag(c, poleX, y) {
@@ -1826,12 +1898,153 @@ class Lulu extends Enemy {
     }
 }
 
+// ゆいちゃんが投げるハート (放物線を描いて飛んでくる)
+class HeartShot extends Enemy {
+    constructor(x, y, vx) {
+        super(x / TS * TS, y, 18, 18);
+        this.x = x;
+        this.y = y;
+        this.vx = vx;
+        this.vy = -360;
+        this.active = true;
+    }
+
+    update(dt, level) {
+        this.anim += dt;
+        if (this.flipped) {
+            this.vy = Math.min(this.vy + 2200 * dt, 900);
+            this.y += this.vy * dt;
+            if (this.y > level.pixelHeight + 100) this.removed = true;
+            return;
+        }
+        this.vy = Math.min(this.vy + 1400 * dt, 700);
+        this.x += this.vx * dt;
+        this.y += this.vy * dt;
+        const col = Math.floor((this.x + this.w / 2) / TS);
+        const row = Math.floor((this.y + this.h / 2) / TS);
+        if (level.isSolid(col, row)) this.removed = true;
+        if (this.y > level.pixelHeight + 60) this.removed = true;
+    }
+
+    stomp(game) {
+        // 踏むと弾き返せる
+        this.alive = false;
+        this.flipped = true;
+        this.vy = -250;
+        game.sound.kick();
+        game.addScore(100, this.x, this.y);
+    }
+
+    render(c, camX) {
+        const wob = Math.sin(this.anim * 14) * 2;
+        drawHeart(c, this.x + this.w / 2 - camX, this.y + this.h / 2 + wob, 11);
+    }
+}
+
+// ボス: ゆいちゃん (ボブヘアの女の子)。3回踏むと なかなおり できる
+class Yui extends Enemy {
+    constructor(x, y) {
+        super(x, y, 44, 58);
+        this.boss = true;
+        this.hp = 3;
+        this.maxHp = 3;
+        this.invuln = 0;
+        this.defeated = false;
+        this.jumpTimer = 2;
+        this.throwTimer = 2.5;
+        this.dir = -1;
+    }
+
+    update(dt, level, player, game) {
+        this.anim += dt;
+        if (this.invuln > 0) this.invuln -= dt;
+        if (this.defeated) {
+            // へたりこんで目を回している
+            this.vx = 0;
+            this.vy = Math.min(this.vy + 2200 * dt, 900);
+            moveAndCollide(this, level, dt);
+            return;
+        }
+
+        // 踏まれた直後はひるんで立ち止まる (逃げる隙を作る)
+        const stunned = this.invuln > 0;
+        const speed = 80 + (this.maxHp - this.hp) * 40;  // 怒るほど速くなる
+        if (player && !stunned) this.dir = player.x + player.w / 2 > this.x + this.w / 2 ? 1 : -1;
+        this.vx = stunned ? 0 : speed * this.dir;
+        this.vy = Math.min(this.vy + 2200 * dt, 900);
+        const res = moveAndCollide(this, level, dt);
+
+        const grounded = res.ground || onGround(this, level);
+        this.jumpTimer -= dt;
+        if (grounded && !stunned && this.jumpTimer <= 0) {
+            this.vy = -580;
+            this.jumpTimer = 1.8 + Math.random() * 1.2;
+        }
+
+        // プレイヤーが遠いときはハートを投げる
+        this.throwTimer -= dt;
+        if (game && player && !stunned && this.throwTimer <= 0 &&
+            Math.abs(player.x - this.x) > 140) {
+            this.throwTimer = 2.4 + Math.random() * 0.8;
+            const vx = (player.x > this.x ? 1 : -1) * (200 + Math.random() * 60);
+            game.enemies.push(new HeartShot(this.x + this.w / 2, this.y + 6, vx));
+            game.sound.kick();
+        }
+    }
+
+    takeHit(game) {
+        if (this.invuln > 0 || this.defeated) return;
+        this.hp--;
+        this.invuln = 1.2;
+        game.sound.hurt();
+        game.addScore(500, this.x, this.y);
+        if (this.hp <= 0) {
+            this.defeated = true;
+            this.alive = false;        // 接触ダメージ停止
+            this.vy = -350;
+            game.addScore(5000, this.x, this.y - 20);
+            game.onBossDefeated();
+        }
+    }
+
+    stomp(game) { this.takeHit(game); }
+    hitByFireball(game) { this.takeHit(game); }
+
+    render(c, camX, time) {
+        // 被弾中は点滅
+        if (this.invuln > 0 && !this.defeated && Math.floor(this.anim * 12) % 2 === 0) return;
+        let img;
+        if (this.defeated) img = sprites.yuiDizzy.right;
+        else img = (Math.floor(this.anim * 7) % 2 === 0) ? sprites.yui1.right : sprites.yui2.right;
+        this.drawImg(c, img, camX);
+
+        const cx = this.x + this.w / 2 - camX;
+        if (this.defeated) {
+            // 目を回している星
+            for (let i = 0; i < 3; i++) {
+                const a = this.anim * 4 + i * (Math.PI * 2 / 3);
+                c.fillStyle = '#ffe060';
+                c.beginPath();
+                c.arc(cx + Math.cos(a) * 24, this.y - 8 + Math.sin(a) * 6, 3.5, 0, Math.PI * 2);
+                c.fill();
+            }
+        } else {
+            // HP ハート
+            for (let i = 0; i < this.maxHp; i++) {
+                drawHeart(c, cx - (this.maxHp - 1) * 9 + i * 18, this.y - 16, 9,
+                    i < this.hp ? '#ff4060' : '#00000033');
+            }
+        }
+    }
+}
+
 function createEnemy(type, x, y) {
     if (type === 'kuri') return new Kuri(x, y);
     if (type === 'kame') return new Kame(x, y);
     if (type === 'kiiro') return new Kiiro(x, y);
     if (type === 'osushi') return new Osushi(x, y);
     if (type === 'lulu') return new Lulu(x, y);
+    if (type === 'yui') return new Yui(x, y);
     return null;
 }
 
@@ -2397,7 +2610,7 @@ class Game {
         }
         // 叩いたブロックの上に乗っている敵を倒す
         for (const e of this.enemies) {
-            if (!e.alive || e.flipped) continue;
+            if (!e.alive || e.flipped || e.boss) continue;
             const onTop = Math.abs(e.y + e.h - row * TS) < 6 &&
                 e.x + e.w > col * TS - 4 && e.x < (col + 1) * TS + 4;
             if (onTop) {
@@ -2449,6 +2662,28 @@ class Game {
                 break;
             case 'clear':
                 this.particles.update(dt);
+                this.stateTimer -= dt;
+                if (this.stateTimer <= 0) {
+                    if (this.levelIndex + 1 < LEVELS.length) this.loadLevel(this.levelIndex + 1);
+                    else {
+                        this.state = 'win';
+                        this.stateTimer = 0;
+                        this.saveBest();
+                    }
+                }
+                break;
+            case 'bossclear':
+                // ボス撃破演出: ゆいちゃんは目を回し、花火が上がる
+                for (const e of this.enemies) {
+                    if (e.boss) e.update(dt, this.level, this.player, this);
+                }
+                this.particles.update(dt);
+                this.popups.forEach((s) => s.update(dt));
+                this.popups = this.popups.filter((s) => !s.removed);
+                if (Math.random() < 0.04) {
+                    this.particles.firework(
+                        this.camera.x + 150 + Math.random() * 660, 60 + Math.random() * 180);
+                }
                 this.stateTimer -= dt;
                 if (this.stateTimer <= 0) {
                     if (this.levelIndex + 1 < LEVELS.length) this.loadLevel(this.levelIndex + 1);
@@ -2566,7 +2801,8 @@ class Game {
                 if (!e.alive || e.flipped || !e.active || f.removed) continue;
                 if (this.overlap(f, e)) {
                     f.removed = true;
-                    e.flip(this, Math.sign(f.vx) || 1);
+                    if (e.hitByFireball) e.hitByFireball(this);
+                    else e.flip(this, Math.sign(f.vx) || 1);
                     this.particles.sparkle(e.x + e.w / 2, e.y + e.h / 2, '#ff9f1c');
                     this.sound.kick();
                 }
@@ -2600,9 +2836,17 @@ class Game {
         }
 
         // ゴールの旗に到達
-        if (p.x + p.w >= this.level.flagX * TS + 12 && !p.dead) {
+        if (!this.level.bossLevel && p.x + p.w >= this.level.flagX * TS + 12 && !p.dead) {
             this.startFlag();
         }
+    }
+
+    onBossDefeated() {
+        // 飛んでいるハートを消して勝利演出へ
+        this.enemies = this.enemies.filter((e) => !(e instanceof HeartShot));
+        this.state = 'bossclear';
+        this.stateTimer = 5;
+        this.sound.clear();
     }
 
     startDeath() {
@@ -2717,13 +2961,15 @@ class Game {
             if (d.kind === 'plant') drawPlant(c, d.x - camX, groundLine);
         }
 
-        // 城と旗
-        if (level.theme === 'office') drawElevator(c, level.castleX * TS - camX, groundLine);
-        else drawCastle(c, level.castleX * TS - camX, groundLine);
-        const flagBaseY = this.state === 'flag' || this.state === 'clearwalk' || this.state === 'clear' || this.flagDone
-            ? (this.flagY ?? (GROUND_Y - 10) * TS)
-            : (GROUND_Y - 11) * TS + 16;
-        drawFlag(c, level.flagX * TS + TS / 2 - 3 - camX, flagBaseY);
+        // 城と旗 (ボス面にはなし)
+        if (!level.bossLevel) {
+            if (level.theme === 'office') drawElevator(c, level.castleX * TS - camX, groundLine);
+            else drawCastle(c, level.castleX * TS - camX, groundLine);
+            const flagBaseY = this.state === 'flag' || this.state === 'clearwalk' || this.state === 'clear' || this.flagDone
+                ? (this.flagY ?? (GROUND_Y - 10) * TS)
+                : (GROUND_Y - 11) * TS + 16;
+            drawFlag(c, level.flagX * TS + TS / 2 - 3 - camX, flagBaseY);
+        }
 
         // ブロックからせり上がり中のアイテムはタイルの後ろに描く
         for (const it of this.items) {
@@ -2764,6 +3010,9 @@ class Game {
             // 最終面クリアの瞬間は何も出さない (win 画面へ)
         } else if (this.state === 'clear') {
             this.overlayText(c, 'COURSE CLEAR!', 'タイムボーナス獲得!');
+        }
+        if (this.state === 'bossclear') {
+            this.overlayText(c, '🎀 なかなおり! 🎀', 'ゆいちゃんと なかよくなった!');
         }
         if (this.state === 'win') {
             this.overlayText(c, '🎉 ALL CLEAR! 🎉',

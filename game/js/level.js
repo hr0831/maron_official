@@ -94,6 +94,7 @@ export class Level {
         this.music = data.music || 'overworld';
         this.width = data.width;
         this.time = data.time || 300;
+        this.bossLevel = !!data.boss;
         this.grid = new Uint8Array(this.width * ROWS);
         this.contents = new Map();
         this.spawns = [];

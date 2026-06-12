@@ -1,5 +1,5 @@
 import { TS, moveAndCollide, onGround } from '../level.js';
-import { sprites } from '../sprites.js';
+import { sprites, drawHeart } from '../sprites.js';
 
 // 敵の共通ベース
 class Enemy {
@@ -329,11 +329,152 @@ export class Lulu extends Enemy {
     }
 }
 
+// ゆいちゃんが投げるハート (放物線を描いて飛んでくる)
+export class HeartShot extends Enemy {
+    constructor(x, y, vx) {
+        super(x / TS * TS, y, 18, 18);
+        this.x = x;
+        this.y = y;
+        this.vx = vx;
+        this.vy = -360;
+        this.active = true;
+    }
+
+    update(dt, level) {
+        this.anim += dt;
+        if (this.flipped) {
+            this.vy = Math.min(this.vy + 2200 * dt, 900);
+            this.y += this.vy * dt;
+            if (this.y > level.pixelHeight + 100) this.removed = true;
+            return;
+        }
+        this.vy = Math.min(this.vy + 1400 * dt, 700);
+        this.x += this.vx * dt;
+        this.y += this.vy * dt;
+        const col = Math.floor((this.x + this.w / 2) / TS);
+        const row = Math.floor((this.y + this.h / 2) / TS);
+        if (level.isSolid(col, row)) this.removed = true;
+        if (this.y > level.pixelHeight + 60) this.removed = true;
+    }
+
+    stomp(game) {
+        // 踏むと弾き返せる
+        this.alive = false;
+        this.flipped = true;
+        this.vy = -250;
+        game.sound.kick();
+        game.addScore(100, this.x, this.y);
+    }
+
+    render(c, camX) {
+        const wob = Math.sin(this.anim * 14) * 2;
+        drawHeart(c, this.x + this.w / 2 - camX, this.y + this.h / 2 + wob, 11);
+    }
+}
+
+// ボス: ゆいちゃん (ボブヘアの女の子)。3回踏むと なかなおり できる
+export class Yui extends Enemy {
+    constructor(x, y) {
+        super(x, y, 44, 58);
+        this.boss = true;
+        this.hp = 3;
+        this.maxHp = 3;
+        this.invuln = 0;
+        this.defeated = false;
+        this.jumpTimer = 2;
+        this.throwTimer = 2.5;
+        this.dir = -1;
+    }
+
+    update(dt, level, player, game) {
+        this.anim += dt;
+        if (this.invuln > 0) this.invuln -= dt;
+        if (this.defeated) {
+            // へたりこんで目を回している
+            this.vx = 0;
+            this.vy = Math.min(this.vy + 2200 * dt, 900);
+            moveAndCollide(this, level, dt);
+            return;
+        }
+
+        // 踏まれた直後はひるんで立ち止まる (逃げる隙を作る)
+        const stunned = this.invuln > 0;
+        const speed = 80 + (this.maxHp - this.hp) * 40;  // 怒るほど速くなる
+        if (player && !stunned) this.dir = player.x + player.w / 2 > this.x + this.w / 2 ? 1 : -1;
+        this.vx = stunned ? 0 : speed * this.dir;
+        this.vy = Math.min(this.vy + 2200 * dt, 900);
+        const res = moveAndCollide(this, level, dt);
+
+        const grounded = res.ground || onGround(this, level);
+        this.jumpTimer -= dt;
+        if (grounded && !stunned && this.jumpTimer <= 0) {
+            this.vy = -580;
+            this.jumpTimer = 1.8 + Math.random() * 1.2;
+        }
+
+        // プレイヤーが遠いときはハートを投げる
+        this.throwTimer -= dt;
+        if (game && player && !stunned && this.throwTimer <= 0 &&
+            Math.abs(player.x - this.x) > 140) {
+            this.throwTimer = 2.4 + Math.random() * 0.8;
+            const vx = (player.x > this.x ? 1 : -1) * (200 + Math.random() * 60);
+            game.enemies.push(new HeartShot(this.x + this.w / 2, this.y + 6, vx));
+            game.sound.kick();
+        }
+    }
+
+    takeHit(game) {
+        if (this.invuln > 0 || this.defeated) return;
+        this.hp--;
+        this.invuln = 1.2;
+        game.sound.hurt();
+        game.addScore(500, this.x, this.y);
+        if (this.hp <= 0) {
+            this.defeated = true;
+            this.alive = false;        // 接触ダメージ停止
+            this.vy = -350;
+            game.addScore(5000, this.x, this.y - 20);
+            game.onBossDefeated();
+        }
+    }
+
+    stomp(game) { this.takeHit(game); }
+    hitByFireball(game) { this.takeHit(game); }
+
+    render(c, camX, time) {
+        // 被弾中は点滅
+        if (this.invuln > 0 && !this.defeated && Math.floor(this.anim * 12) % 2 === 0) return;
+        let img;
+        if (this.defeated) img = sprites.yuiDizzy.right;
+        else img = (Math.floor(this.anim * 7) % 2 === 0) ? sprites.yui1.right : sprites.yui2.right;
+        this.drawImg(c, img, camX);
+
+        const cx = this.x + this.w / 2 - camX;
+        if (this.defeated) {
+            // 目を回している星
+            for (let i = 0; i < 3; i++) {
+                const a = this.anim * 4 + i * (Math.PI * 2 / 3);
+                c.fillStyle = '#ffe060';
+                c.beginPath();
+                c.arc(cx + Math.cos(a) * 24, this.y - 8 + Math.sin(a) * 6, 3.5, 0, Math.PI * 2);
+                c.fill();
+            }
+        } else {
+            // HP ハート
+            for (let i = 0; i < this.maxHp; i++) {
+                drawHeart(c, cx - (this.maxHp - 1) * 9 + i * 18, this.y - 16, 9,
+                    i < this.hp ? '#ff4060' : '#00000033');
+            }
+        }
+    }
+}
+
 export function createEnemy(type, x, y) {
     if (type === 'kuri') return new Kuri(x, y);
     if (type === 'kame') return new Kame(x, y);
     if (type === 'kiiro') return new Kiiro(x, y);
     if (type === 'osushi') return new Osushi(x, y);
     if (type === 'lulu') return new Lulu(x, y);
+    if (type === 'yui') return new Yui(x, y);
     return null;
 }
