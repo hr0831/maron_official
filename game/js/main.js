@@ -10,6 +10,7 @@ import { HUD } from './hud.js';
 import { LEVELS } from './levels/index.js';
 import {
     sprites, THEMES, drawTile, drawCloud, drawHill, drawBush, drawCastle, drawFlag,
+    drawWindow, drawPlant, drawClock, drawElevator,
 } from './sprites.js';
 
 const STEP = 1 / 120;
@@ -426,7 +427,7 @@ class Game {
         c.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
         // 星空 (夜と地下)
-        if (level.theme !== 'overworld') {
+        if (level.theme === 'night' || level.theme === 'underground') {
             c.fillStyle = level.theme === 'night' ? '#ffffffcc' : '#ffffff22';
             for (let i = 0; i < 60; i++) {
                 const sx = ((i * 137 + 61) % (this.canvas.width + 100)) - (camX * 0.15) % (this.canvas.width + 100);
@@ -445,10 +446,14 @@ class Game {
         for (const d of level.decor) {
             if (d.kind === 'cloud') drawCloud(c, d.x - camX * 0.55, 60 + d.extra * 38, 0.8 + d.extra * 0.25, th.cloud);
             if (d.kind === 'bush') drawBush(c, d.x - camX, groundLine, th);
+            if (d.kind === 'window') drawWindow(c, d.x - camX * 0.8, 110 + d.extra * 50);
+            if (d.kind === 'clock') drawClock(c, d.x - camX * 0.8, 70, this.elapsed + d.x);
+            if (d.kind === 'plant') drawPlant(c, d.x - camX, groundLine);
         }
 
         // 城と旗
-        drawCastle(c, level.castleX * TS - camX, groundLine);
+        if (level.theme === 'office') drawElevator(c, level.castleX * TS - camX, groundLine);
+        else drawCastle(c, level.castleX * TS - camX, groundLine);
         const flagBaseY = this.state === 'flag' || this.state === 'clearwalk' || this.state === 'clear' || this.flagDone
             ? (this.flagY ?? (GROUND_Y - 10) * TS)
             : (GROUND_Y - 11) * TS + 16;

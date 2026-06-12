@@ -397,6 +397,12 @@ export const sprites = build();
 
 // ================= テーマ =================
 export const THEMES = {
+    office: {
+        sky: '#e8e2d4', groundA: '#8a97a8', groundB: '#67748a', groundTop: '#aab8c4',
+        brick: '#c9a76b', brickLine: '#96763f', hard: '#9aa0aa',
+        hillA: '#3ba53b', hillB: '#9aa2ae', cloud: '#ffffff',
+        pipe: ['#8a929e', '#c0c8d4', '#565e6a'],
+    },
     overworld: {
         sky: '#5c94fc', groundA: '#c8723c', groundB: '#9c4a1c', groundTop: '#e8a05c',
         brick: '#b85c28', brickLine: '#7a3a14', hard: '#9a9a9a',
@@ -473,27 +479,29 @@ export function drawTile(c, id, x, y, theme, t) {
             break;
         case T.PIPE_TL:
         case T.PIPE_TR: {
+            const [pa, pb, pd] = th.pipe || ['#2d9a2d', '#67d040', '#175a17'];
             const left = id === T.PIPE_TL;
-            c.fillStyle = '#2d9a2d';
+            c.fillStyle = pa;
             c.fillRect(x - (left ? 0 : 4), y, TS + 4, TS);
-            c.fillStyle = '#67d040';
+            c.fillStyle = pb;
             c.fillRect(x + (left ? 4 : -2), y, 6, TS);
-            c.fillStyle = '#175a17';
+            c.fillStyle = pd;
             c.fillRect(x, y, left ? 2 : 0, TS);
             if (!left) c.fillRect(x + TS - 2, y, 2, TS);
-            c.fillStyle = '#175a17';
+            c.fillStyle = pd;
             c.fillRect(x - (left ? 0 : 4), y, TS + 4, 3);
             c.fillRect(x - (left ? 0 : 4), y + TS - 3, TS + 4, 3);
             break;
         }
         case T.PIPE_L:
         case T.PIPE_R: {
+            const [pa, pb, pd] = th.pipe || ['#2d9a2d', '#67d040', '#175a17'];
             const left = id === T.PIPE_L;
-            c.fillStyle = '#2d9a2d';
+            c.fillStyle = pa;
             c.fillRect(x + (left ? 2 : 0), y, TS - 2, TS);
-            c.fillStyle = '#67d040';
+            c.fillStyle = pb;
             c.fillRect(x + (left ? 6 : 0), y, 6, TS);
-            c.fillStyle = '#175a17';
+            c.fillStyle = pd;
             if (left) c.fillRect(x + 2, y, 2, TS);
             else c.fillRect(x + TS - 4, y, 2, TS);
             break;
@@ -598,6 +606,95 @@ export function drawCastle(c, x, baseY) {
     c.lineTo(x + w / 2 + 30, baseY - h - 82);
     c.lineTo(x + w / 2 + 2, baseY - h - 72);
     c.fill();
+}
+
+// ---- オフィステーマの装飾 ----
+export function drawWindow(c, x, y) {
+    c.fillStyle = '#9aa2ae';
+    c.fillRect(x - 6, y - 6, 96, 76);
+    c.fillStyle = '#87b8e8';
+    c.fillRect(x, y, 84, 64);
+    // 窓の外の雲
+    c.fillStyle = '#ffffffcc';
+    c.beginPath();
+    c.arc(x + 24, y + 40, 10, 0, Math.PI * 2);
+    c.arc(x + 38, y + 34, 13, 0, Math.PI * 2);
+    c.arc(x + 54, y + 40, 10, 0, Math.PI * 2);
+    c.fill();
+    c.fillRect(x + 14, y + 40, 50, 9);
+    // 桟
+    c.fillStyle = '#e8e8ec';
+    c.fillRect(x + 40, y, 4, 64);
+    c.fillRect(x, y + 30, 84, 4);
+}
+
+export function drawPlant(c, x, baseY) {
+    c.fillStyle = '#2d8a2d';
+    c.beginPath();
+    c.ellipse(x + 16, baseY - 44, 9, 17, -0.5, 0, Math.PI * 2);
+    c.ellipse(x + 22, baseY - 48, 9, 19, 0.1, 0, Math.PI * 2);
+    c.ellipse(x + 28, baseY - 44, 9, 17, 0.5, 0, Math.PI * 2);
+    c.fill();
+    c.fillStyle = '#b06a3a';
+    c.beginPath();
+    c.moveTo(x + 8, baseY - 30);
+    c.lineTo(x + 36, baseY - 30);
+    c.lineTo(x + 31, baseY);
+    c.lineTo(x + 13, baseY);
+    c.fill();
+    c.fillStyle = '#8a4a24';
+    c.fillRect(x + 8, baseY - 30, 28, 5);
+}
+
+export function drawClock(c, x, y, t) {
+    c.fillStyle = '#5a626e';
+    c.beginPath();
+    c.arc(x, y, 15, 0, Math.PI * 2);
+    c.fill();
+    c.fillStyle = '#f8f8f4';
+    c.beginPath();
+    c.arc(x, y, 12, 0, Math.PI * 2);
+    c.fill();
+    c.strokeStyle = '#333';
+    c.lineWidth = 2;
+    const a = (t || 0) * 0.05;
+    c.beginPath();
+    c.moveTo(x, y);
+    c.lineTo(x + Math.cos(a) * 8, y + Math.sin(a) * 8);
+    c.moveTo(x, y);
+    c.lineTo(x + Math.cos(a * 12) * 5, y + Math.sin(a * 12) * 5);
+    c.stroke();
+}
+
+// ゴール: オフィスのエレベーター (城の代わり)
+export function drawElevator(c, x, baseY) {
+    const w = 120, h = 120;
+    c.fillStyle = '#b8bcc4';
+    c.fillRect(x, baseY - h, w, h);
+    c.fillStyle = '#6a727e';
+    c.fillRect(x + 12, baseY - h + 34, w - 24, h - 34);
+    // ドア (中央に継ぎ目)
+    c.fillStyle = '#8e96a2';
+    c.fillRect(x + 16, baseY - h + 38, w - 32, h - 38);
+    c.fillStyle = '#5a626e';
+    c.fillRect(x + w / 2 - 2, baseY - h + 38, 4, h - 38);
+    // 階数ランプ
+    c.fillStyle = '#222';
+    c.fillRect(x + w / 2 - 22, baseY - h + 10, 44, 16);
+    c.fillStyle = '#ffb030';
+    c.beginPath();
+    c.moveTo(x + w / 2 - 12, baseY - h + 22);
+    c.lineTo(x + w / 2 - 6, baseY - h + 13);
+    c.lineTo(x + w / 2, baseY - h + 22);
+    c.fill();
+    // EXIT サイン
+    c.fillStyle = '#1c7a3c';
+    c.fillRect(x + w / 2 - 26, baseY - h - 26, 52, 20);
+    c.fillStyle = '#aaffcc';
+    c.font = 'bold 13px monospace';
+    c.textAlign = 'center';
+    c.textBaseline = 'middle';
+    c.fillText('EXIT', x + w / 2, baseY - h - 15);
 }
 
 export function drawFlag(c, poleX, y) {
