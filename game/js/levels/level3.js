@@ -79,6 +79,7 @@ export default {
         // ゴール大陸
         b.ground(166, 197);
         b.enemy('kiiro', 171);
+        b.enemy('lulu', 176);
         b.goal(184);
     },
 };

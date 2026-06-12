@@ -59,6 +59,7 @@ export default {
         // 階段の丘
         b.stairsUp(116, 4);
         b.stairsDown(122, 4);
+        b.enemy('lulu', 127);
         b.enemy('kame', 128);
         b.pipe(132, 2);
         b.enemy('kiiro', 137);

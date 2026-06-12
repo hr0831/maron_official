@@ -55,6 +55,7 @@ export default {
         b.enemy('kuri', 88);
         b.enemy('kuri', 91);
         b.q(94, 11, 'life');
+        b.enemy('lulu', 96);
 
         // 谷 2 (100-103)
         b.coins(100, 103, 8);

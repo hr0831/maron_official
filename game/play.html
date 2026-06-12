@@ -640,6 +640,35 @@ const OSUSHI_FLAT = [
     '.KKKKKKKKKKKKKK.',
 ];
 
+// ---- 敵: ルルちゃん (ふわふわ子犬・空中を縦横無尽に飛び回る) ----
+const LULU_PAL = { K: '#1a1208', C: '#f0dfc0', D: '#d8c098', W: '#fbf7ee' };
+const LULU_1 = [
+    '.KK..........KK.',
+    'KCCK.KKKKKK.KCCK',
+    'KCCKKCCCCCCKKCCK',
+    'KCDKCCCCCCCCKDCK',
+    'KCDKCKKCCKKCKDCK',
+    '.KKCCKKCCKKCCKK.',
+    '..KCCCCCCCCCCK..',
+    '..KCCCKKKKCCCK..',
+    '..KCWWWKKWWWCK..',
+    '..KCWWWWWWWWCK..',
+    '...KKWWWWWWKK...',
+    '..KWWWWWWWWWWK..',
+    '..KWWWWWWWWWWK..',
+    '..KWWWWWWWWWWK..',
+    '...KWWK..KWWK...',
+    '...KKK....KKK...',
+];
+const LULU_2 = [
+    '................',
+    '.KK..KKKKKK..KK.',
+    'KCCKKCCCCCCKKCCK',
+    ...LULU_1.slice(3, 14),
+    '....KWWKKWWK....',
+    '....KKK..KKK....',
+];
+
 function build() {
     const dogSmallPal = DOG_PAL, dogFirePal = DOG_FIRE_PAL;
     const make = (img) => ({ right: img, left: flipped(img) });    return {
@@ -675,6 +704,8 @@ function build() {
         osushi1: make(px(OSUSHI_1, OSUSHI_PAL)),
         osushi2: make(px(OSUSHI_2, OSUSHI_PAL)),
         osushiFlat: make(px(OSUSHI_FLAT, OSUSHI_PAL)),
+        lulu1: make(px(LULU_1, LULU_PAL)),
+        lulu2: make(px(LULU_2, LULU_PAL)),
         mushroom: px(MUSHROOM, ITEM_PAL),
         oneup: px(MUSHROOM, ONEUP_PAL),
         flower: px(FLOWER, ITEM_PAL),
@@ -1656,11 +1687,54 @@ class Osushi extends Enemy {
     }
 }
 
+// ルルちゃん: 重力も地形も無視して、8の字を描いて縦横無尽に飛び回る子犬
+class Lulu extends Enemy {
+    constructor(x, y) {
+        super(x, y, 26, 26);
+        this.cx = this.x;             // 飛行の中心
+        this.cy = this.y - 70;
+        this.t = Math.random() * Math.PI * 2;
+        this.rx = 110;
+        this.ry = 64;
+        this.prevX = this.x;
+    }
+
+    update(dt, level) {
+        this.anim += dt;
+        if (this.flipped) {
+            this.vy = Math.min(this.vy + 2200 * dt, 900);
+            this.x += this.vx * dt;
+            this.y += this.vy * dt;
+            if (this.y > level.pixelHeight + 100) this.removed = true;
+            return;
+        }
+        this.t += dt;
+        this.prevX = this.x;
+        this.x = this.cx + Math.cos(this.t * 1.6) * this.rx;
+        this.y = Math.max(8, this.cy + Math.sin(this.t * 2.4) * this.ry);
+    }
+
+    stomp(game) {
+        this.alive = false;
+        this.flipped = true;
+        this.vx = 0;
+        this.vy = -320;
+        game.sound.stomp();
+        game.addScore(200, this.x, this.y);
+    }
+
+    render(c, camX) {
+        const img = (Math.floor(this.anim * 8) % 2 === 0) ? sprites.lulu1.right : sprites.lulu2.right;
+        this.drawImg(c, img, camX);
+    }
+}
+
 function createEnemy(type, x, y) {
     if (type === 'kuri') return new Kuri(x, y);
     if (type === 'kame') return new Kame(x, y);
     if (type === 'kiiro') return new Kiiro(x, y);
     if (type === 'osushi') return new Osushi(x, y);
+    if (type === 'lulu') return new Lulu(x, y);
     return null;
 }
 
@@ -1904,6 +1978,7 @@ const LEVEL1_DATA = {
         // 階段の丘
         b.stairsUp(116, 4);
         b.stairsDown(122, 4);
+        b.enemy('lulu', 127);
         b.enemy('kame', 128);
         b.pipe(132, 2);
         b.enemy('kiiro', 137);
@@ -1979,6 +2054,7 @@ const LEVEL2_DATA = {
         b.enemy('kuri', 88);
         b.enemy('kuri', 91);
         b.q(94, 11, 'life');
+        b.enemy('lulu', 96);
 
         // 谷 2 (100-103)
         b.coins(100, 103, 8);
@@ -2090,6 +2166,7 @@ const LEVEL3_DATA = {
         // ゴール大陸
         b.ground(166, 197);
         b.enemy('kiiro', 171);
+        b.enemy('lulu', 176);
         b.goal(184);
     },
 };
