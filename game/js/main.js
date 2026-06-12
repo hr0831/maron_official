@@ -112,6 +112,10 @@ class Game {
             } else if (content === 'life') {
                 this.items.push(new Mushroom(col, row, 'life'));
                 this.sound.sprout();
+            } else if (content === 'flower') {
+                // 確定ファイアフラワー
+                this.items.push(new Flower(col, row));
+                this.sound.sprout();
             } else if (player.form === 'small') {
                 this.items.push(new Mushroom(col, row, 'power'));
                 this.sound.sprout();
@@ -280,7 +284,7 @@ class Game {
                 e.active = e.x < this.camera.x + this.camera.viewW + 64;
                 continue;
             }
-            e.update(dt, this.level, p);
+            e.update(dt, this.level, p, this);
             if (e.removed || !e.alive || p.dead) continue;
             if (!this.overlap(p, e)) continue;
 
@@ -321,9 +325,9 @@ class Game {
                     this.sound.oneUp();
                     this.popups.push(new ScorePopup(it.x, it.y, '1UP!'));
                 } else {
-                    if (p.form === 'small') p.setForm('big');
-                    else if (it instanceof Flower) p.setForm('fire');
-                    else if (p.form === 'big') p.setForm('fire');
+                    // フラワーはどの状態からでもファイアまろんになれる
+                    if (it instanceof Flower) p.setForm('fire');
+                    else if (p.form === 'small') p.setForm('big');
                     this.sound.powerup();
                     this.addScore(1000, it.x, it.y);
                 }
