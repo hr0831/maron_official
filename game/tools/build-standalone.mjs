@@ -21,6 +21,7 @@ const FILES = [
     ['js/levels/level1.js', 'LEVEL1_DATA'],
     ['js/levels/level2.js', 'LEVEL2_DATA'],
     ['js/levels/level3.js', 'LEVEL3_DATA'],
+    ['js/levels/level4.js', 'LEVEL4_DATA'],
     'js/main.js',
 ];
 
@@ -42,7 +43,12 @@ for (const entry of FILES) {
 }
 // levels/index.js の代わり
 js = js.replace('const STEP = 1 / 120;',
-    'const LEVELS = [LEVEL1_DATA, LEVEL2_DATA, LEVEL3_DATA];\n\nconst STEP = 1 / 120;');
+    'const LEVELS = [LEVEL1_DATA, LEVEL2_DATA, LEVEL3_DATA, LEVEL4_DATA];\n\nconst STEP = 1 / 120;');
+
+// 連結漏れがないか検証
+for (const name of ['LEVEL1_DATA', 'LEVEL2_DATA', 'LEVEL3_DATA', 'LEVEL4_DATA']) {
+    if (!js.includes(`const ${name} = {`)) throw new Error(`missing level data: ${name}`);
+}
 
 const css = readFileSync(join(root, 'css/style.css'), 'utf8');
 const htmlSrc = readFileSync(join(root, 'index.html'), 'utf8');
