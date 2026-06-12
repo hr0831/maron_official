@@ -12,6 +12,8 @@ export class Input {
             ShiftLeft: 'run', ShiftRight: 'run', KeyX: 'run',
             Enter: 'start', Escape: 'start',
             KeyM: 'mute',
+            Digit1: 'lv1', Digit2: 'lv2', Digit3: 'lv3', Digit4: 'lv4',
+            Numpad1: 'lv1', Numpad2: 'lv2', Numpad3: 'lv3', Numpad4: 'lv4',
         };
 
         window.addEventListener('keydown', (e) => {
