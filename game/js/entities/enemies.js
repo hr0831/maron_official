@@ -287,10 +287,53 @@ export class Osushi extends Enemy {
     }
 }
 
+// ルルちゃん: 重力も地形も無視して、8の字を描いて縦横無尽に飛び回る子犬
+export class Lulu extends Enemy {
+    constructor(x, y) {
+        super(x, y, 26, 26);
+        this.cx = this.x;             // 飛行の中心
+        this.cy = this.y - 70;
+        this.t = Math.random() * Math.PI * 2;
+        this.rx = 110;
+        this.ry = 64;
+        this.prevX = this.x;
+    }
+
+    update(dt, level) {
+        this.anim += dt;
+        if (this.flipped) {
+            this.vy = Math.min(this.vy + 2200 * dt, 900);
+            this.x += this.vx * dt;
+            this.y += this.vy * dt;
+            if (this.y > level.pixelHeight + 100) this.removed = true;
+            return;
+        }
+        this.t += dt;
+        this.prevX = this.x;
+        this.x = this.cx + Math.cos(this.t * 1.6) * this.rx;
+        this.y = Math.max(8, this.cy + Math.sin(this.t * 2.4) * this.ry);
+    }
+
+    stomp(game) {
+        this.alive = false;
+        this.flipped = true;
+        this.vx = 0;
+        this.vy = -320;
+        game.sound.stomp();
+        game.addScore(200, this.x, this.y);
+    }
+
+    render(c, camX) {
+        const img = (Math.floor(this.anim * 8) % 2 === 0) ? sprites.lulu1.right : sprites.lulu2.right;
+        this.drawImg(c, img, camX);
+    }
+}
+
 export function createEnemy(type, x, y) {
     if (type === 'kuri') return new Kuri(x, y);
     if (type === 'kame') return new Kame(x, y);
     if (type === 'kiiro') return new Kiiro(x, y);
     if (type === 'osushi') return new Osushi(x, y);
+    if (type === 'lulu') return new Lulu(x, y);
     return null;
 }

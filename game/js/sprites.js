@@ -321,6 +321,35 @@ const OSUSHI_FLAT = [
     '.KKKKKKKKKKKKKK.',
 ];
 
+// ---- 敵: ルルちゃん (ふわふわ子犬・空中を縦横無尽に飛び回る) ----
+const LULU_PAL = { K: '#1a1208', C: '#f0dfc0', D: '#d8c098', W: '#fbf7ee' };
+const LULU_1 = [
+    '.KK..........KK.',
+    'KCCK.KKKKKK.KCCK',
+    'KCCKKCCCCCCKKCCK',
+    'KCDKCCCCCCCCKDCK',
+    'KCDKCKKCCKKCKDCK',
+    '.KKCCKKCCKKCCKK.',
+    '..KCCCCCCCCCCK..',
+    '..KCCCKKKKCCCK..',
+    '..KCWWWKKWWWCK..',
+    '..KCWWWWWWWWCK..',
+    '...KKWWWWWWKK...',
+    '..KWWWWWWWWWWK..',
+    '..KWWWWWWWWWWK..',
+    '..KWWWWWWWWWWK..',
+    '...KWWK..KWWK...',
+    '...KKK....KKK...',
+];
+const LULU_2 = [
+    '................',
+    '.KK..KKKKKK..KK.',
+    'KCCKKCCCCCCKKCCK',
+    ...LULU_1.slice(3, 14),
+    '....KWWKKWWK....',
+    '....KKK..KKK....',
+];
+
 function build() {
     const dogSmallPal = DOG_PAL, dogFirePal = DOG_FIRE_PAL;
     const make = (img) => ({ right: img, left: flipped(img) });    return {
@@ -356,6 +385,8 @@ function build() {
         osushi1: make(px(OSUSHI_1, OSUSHI_PAL)),
         osushi2: make(px(OSUSHI_2, OSUSHI_PAL)),
         osushiFlat: make(px(OSUSHI_FLAT, OSUSHI_PAL)),
+        lulu1: make(px(LULU_1, LULU_PAL)),
+        lulu2: make(px(LULU_2, LULU_PAL)),
         mushroom: px(MUSHROOM, ITEM_PAL),
         oneup: px(MUSHROOM, ONEUP_PAL),
         flower: px(FLOWER, ITEM_PAL),
