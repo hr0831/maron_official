@@ -1,0 +1,1838 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026清流王国郡上 こどもキャンプ | NPO法人 Naturecore</title>
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Hiragino Kaku Gothic ProN', 'ヒラギノ角ゴ ProN W3',
+    'Hiragino Sans', 'メイリオ', Meiryo,
+    'ＭＳ Ｐゴシック', sans-serif;
+    color: #2C3E33; background: #FAFBF8; line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  img { max-width: 100%; height: auto; display: block; }
+  a { color: inherit; text-decoration: none; transition: 0.3s; }
+  ul { list-style: none; }
+
+  :root {
+    --river: #4A90B8;
+    --river-deep: #2E6B8E;
+    --river-light: #B8DBE8;
+    --river-pale: #E8F2F7;
+    --mountain: #6B8E5A;
+    --mountain-light: #C5D9B8;
+    --sun: #F4C95D;
+    --sun-deep: #E8AC3D;
+    --earth: #E8DCC4;
+    --berry: #C97B5F;
+    --berry-deep: #A8523E;
+    --base: #FAFBF8;
+    --base-warm: #F5F1E8;
+    --text: #2C3E33;
+    --gray: #6B7568;
+    --white: #FFFFFF;
+    --border: #C8D4D0;
+    --border-strong: #8FA39C;
+  }
+
+  /* ===== ヘッダー ===== */
+  header {
+    position: fixed; top: 0; left: 0; width: 100%;
+    background: rgba(255,255,255,0.95); backdrop-filter: blur(15px);
+    box-shadow: 0 1px 10px rgba(0,0,0,0.04);
+    z-index: 1000; padding: 15px 30px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .logo a { display: flex; align-items: center; }
+  .logo img { height: 50px; width: auto; }
+  nav ul { display: flex; gap: 25px; align-items: center; }
+  nav a { color: var(--text); font-weight: 600; font-size: 15px; }
+  nav a:hover { color: var(--river); }
+  .nav-cta {
+    background: var(--river); color: white !important;
+    padding: 10px 22px; border-radius: 30px; font-weight: bold;
+    transition: 0.3s;
+  }
+  .nav-cta:hover {
+    background: var(--river-deep);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(74,144,184,0.3);
+  }
+  .menu-toggle { display: none; background: none; border: none; font-size: 28px; cursor: pointer; color: var(--river); }
+
+/* ===== ヒーロー（ページヘッダー：横長写真背景） ===== */
+.hero {
+  margin-top: 70px;
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+}
+.page-header {
+  position: relative;
+  width: 100%;
+  min-height: 320px;
+  background-image:
+    linear-gradient(rgba(46,107,142,0.55), rgba(46,107,142,0.55)),
+    url('images/river_child.jpg');
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 60px 20px;
+}
+.page-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(90deg,
+    var(--river) 0%, var(--river) 25%,
+    var(--sun) 25%, var(--sun) 50%,
+    var(--mountain) 50%, var(--mountain) 75%,
+    var(--berry) 75%, var(--berry) 100%);
+}
+.page-header-inner {
+  position: relative;
+  z-index: 2;
+  max-width: 1100px;
+}
+.page-header-tag {
+  display: inline-block;
+  background: rgba(255,255,255,0.95);
+  color: var(--river-deep);
+  padding: 8px 22px;
+  border-radius: 30px;
+  font-size: 13px;
+  font-weight: 900;
+  margin-bottom: 20px;
+  letter-spacing: 0.08em;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+.page-header h1 {
+  font-size: clamp(24px, 3.8vw, 40px);
+  font-weight: 900;
+  color: white;
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.4);
+}
+
+/* チラシ画像セクション（ヒーローの下に独立） */
+.flyer-section {
+  background: var(--base);
+  padding: 70px 20px 30px;
+}
+.hero-flyer {
+  max-width: 1100px;
+  margin: 0 auto;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 15px 50px rgba(74,144,184,0.2);
+}
+.hero-flyer img { width: 100%; height: auto; display: block; }
+
+/* パンくず */
+.breadcrumb {
+  background: white;
+  padding: 14px 30px;
+  font-size: 13px;
+  color: var(--gray);
+  border-bottom: 1px solid rgba(74,144,184,0.1);
+}
+.breadcrumb-container { max-width: 1200px; margin: 0 auto; }
+.breadcrumb a { color: var(--river); font-weight: 600; }
+.breadcrumb a:hover { text-decoration: underline; }
+
+  /* ===== セクション共通 ===== */
+  section { padding: 90px 20px; position: relative; }
+  .container { max-width: 1100px; margin: 0 auto; }
+
+  /* セクション区切り装飾 */
+  .section-divider {
+    height: 6px;
+    background: linear-gradient(90deg,
+      var(--river) 0%,
+      var(--river) 25%,
+      var(--sun) 25%,
+      var(--sun) 50%,
+      var(--mountain) 50%,
+      var(--mountain) 75%,
+      var(--berry) 75%,
+      var(--berry) 100%);
+  }
+
+  .section-title {
+    text-align: center;
+    font-size: clamp(26px, 3.5vw, 34px);
+    color: var(--text);
+    margin-bottom: 14px;
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    position: relative;
+    z-index: 2;
+  }
+  .section-title .marker {
+    background: var(--sun);
+    padding: 2px 14px;
+    border-radius: 8px;
+    display: inline-block;
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.08);
+  }
+  .section-subtitle {
+    text-align: center;
+    color: var(--river);
+    margin-bottom: 50px;
+    font-size: 14px;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+    position: relative;
+    z-index: 2;
+  }
+  .section-subtitle::before { content: '― '; }
+  .section-subtitle::after { content: ' ―'; }
+
+  /* ===== こどもキャンプとは？ ===== */
+  .about { background: var(--white); }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    align-items: center;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  .about-img {
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(74,144,184,0.15);
+  }
+  .about-img img { width: 100%; height: auto; display: block; }
+  .about-text h3 {
+    color: var(--river-deep);
+    font-size: 22px;
+    font-weight: 900;
+    margin-bottom: 18px;
+    line-height: 1.5;
+  }
+  .about-text p {
+    font-size: 15px;
+    line-height: 2.1;
+    color: var(--text);
+    margin-bottom: 18px;
+  }
+  .about-text strong {
+    color: var(--river-deep);
+    font-weight: 700;
+  }
+  .about-highlight {
+    background: var(--river-pale);
+    padding: 22px 25px;
+    border-radius: 16px;
+    border-left: 4px solid var(--river);
+    margin-top: 20px;
+  }
+  .about-highlight h4 {
+    color: var(--river-deep);
+    font-size: 16px;
+    font-weight: 900;
+    margin-bottom: 8px;
+  }
+  .about-highlight p {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.9;
+    margin: 0;
+  }
+
+  /* ===== YouTube埋め込み ===== */
+  .video-section { background: var(--base); text-align: center; }
+  .video-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+  }
+  .video-wrapper iframe {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  /* ===== 大切にしていること ===== */
+  .values { background: var(--white); }
+  .values-intro {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    align-items: center;
+    max-width: 1000px;
+    margin: 0 auto 50px;
+  }
+  .values-img {
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(74,144,184,0.15);
+  }
+  .values-img img { width: 100%; height: auto; display: block; }
+  .values-text p {
+    font-size: 15px;
+    line-height: 2.1;
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+  .values-text strong {
+    color: var(--river-deep);
+    font-weight: 700;
+  }
+
+  .values-blocks { max-width: 1000px; margin: 0 auto; }
+  .values-block {
+    background: var(--river-pale);
+    border-radius: 20px;
+    padding: 35px 30px;
+    margin-bottom: 20px;
+  }
+  .values-block:last-child { margin-bottom: 0; }
+  .values-block.mountain { background: #EFF5EA; }
+  .values-block h3 {
+    color: var(--river-deep);
+    font-size: 18px;
+    font-weight: 900;
+    margin-bottom: 18px;
+    text-align: center;
+  }
+  .values-block.mountain h3 { color: var(--mountain); }
+  .values-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+  }
+  .values-tag {
+    background: white;
+    padding: 10px 20px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: 0.3s;
+  }
+  .values-tag:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(74,144,184,0.15);
+  }
+
+  /* ===== 見守りの特徴 ===== */
+  .features { background: var(--base); }
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 18px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .feature-item {
+    background: white;
+    padding: 28px 18px;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+    transition: 0.3s;
+    border-top: 4px solid var(--river);
+  }
+  .feature-item:nth-child(2) { border-top-color: var(--mountain); }
+  .feature-item:nth-child(3) { border-top-color: var(--sun-deep); }
+  .feature-item:nth-child(4) { border-top-color: var(--berry); }
+  .feature-item:nth-child(5) { border-top-color: var(--river-deep); }
+  .feature-item:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 25px rgba(74,144,184,0.12);
+  }
+  .feature-icon { font-size: 36px; margin-bottom: 10px; }
+  .feature-item h4 {
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 900;
+    line-height: 1.5;
+  }
+
+  /* ===== スケジュール画像 ===== */
+  .schedule { background: var(--white); }
+  .schedule-img {
+    max-width: 950px;
+    margin: 0 auto;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(74,144,184,0.12);
+  }
+  .schedule-img img { width: 100%; height: auto; display: block; }
+  .schedule-note {
+    max-width: 900px;
+    margin: 25px auto 0;
+    font-size: 12px;
+    color: var(--gray);
+    line-height: 1.9;
+    text-align: center;
+  }
+
+  /* ===== 体験メニュー ===== */
+  .experience { background: var(--base); }
+  .experience-badge {
+    background: var(--sun);
+    color: var(--text);
+    padding: 8px 20px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 12px;
+  }
+  .experience-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  .exp-card {
+    background: var(--white);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: 0.4s;
+    box-shadow: 0 6px 20px rgba(74,144,184,0.08);
+  }
+  .exp-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 15px 35px rgba(74,144,184,0.18);
+  }
+  .exp-photo {
+    height: 220px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+  }
+  .exp-card:nth-child(1) .exp-photo {
+    background-image: url('images/sawanobori.jpg');
+    background-color: var(--river-light);
+  }
+  .exp-card:nth-child(2) .exp-photo {
+    background-image: url('images/yasai.jpg');
+    background-color: var(--mountain-light);
+  }
+  .exp-num {
+    position: absolute;
+    top: 15px; left: 15px;
+    background: var(--white);
+    color: var(--river-deep);
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900;
+    font-size: 18px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+  }
+  .exp-body { padding: 28px 25px; }
+  .exp-tag {
+    display: inline-block;
+    background: var(--river);
+    color: white;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: bold;
+    margin-bottom: 12px;
+  }
+  .exp-card h3 {
+    color: var(--text);
+    font-size: 19px;
+    font-weight: 900;
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+  .exp-card p {
+    font-size: 13px;
+    color: var(--gray);
+    line-height: 1.9;
+  }
+  .exp-note {
+    margin-top: 15px;
+    font-size: 11px;
+    color: var(--berry);
+    font-weight: 600;
+  }
+
+  /* ===== 後援 ===== */
+  .sponsor {
+    background: var(--white);
+    padding: 60px 20px;
+  }
+  .sponsor-box {
+    max-width: 900px;
+    margin: 0 auto;
+    background: var(--earth);
+    padding: 30px 35px;
+    border-radius: 16px;
+    text-align: center;
+  }
+  .sponsor-box h3 {
+    color: var(--text);
+    font-size: 16px;
+    font-weight: 900;
+    margin-bottom: 14px;
+  }
+  .sponsor-box p {
+    font-size: 13px;
+    color: var(--gray);
+    line-height: 2;
+  }
+
+  /* ===== ★情報セクション専用のヘッダー（章扉風） ===== */
+  .info-block-header {
+    background: linear-gradient(135deg, var(--river-deep) 0%, var(--river) 100%);
+    color: white;
+    padding: 50px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .info-block-header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 5px;
+    background: var(--sun);
+  }
+  .info-block-header .small-label {
+    display: inline-block;
+    background: var(--sun);
+    color: var(--text);
+    padding: 5px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 900;
+    margin-bottom: 14px;
+    letter-spacing: 0.15em;
+  }
+  .info-block-header h2 {
+    font-size: clamp(24px, 3vw, 32px);
+    font-weight: 900;
+    color: white;
+    margin: 0;
+  }
+  .info-block-header p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.9);
+    margin-top: 10px;
+  }
+
+  /* ===== 旅行の仕組み（はっきり版） ===== */
+  .info {
+    background: var(--base);
+  }
+  .info-table {
+    max-width: 950px;
+    margin: 0 auto;
+    background: white;
+    border: 2px solid var(--border-strong);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+  }
+  .info-row {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    border-bottom: 2px solid var(--border-strong);
+    align-items: stretch;
+  }
+  .info-row:last-child { border-bottom: none; }
+  .info-label {
+    background: var(--mountain);
+    color: white;
+    font-weight: 900;
+    font-size: 14px;
+    padding: 22px 24px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-right: 2px solid var(--border-strong);
+    line-height: 1.6;
+  }
+  .info-label .icon { font-size: 20px; }
+  .info-value {
+    padding: 22px 28px;
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.9;
+    background: white;
+  }
+  .info-value .sub {
+    display: block;
+    font-size: 13px;
+    color: var(--gray);
+    margin-top: 8px;
+    padding-left: 12px;
+    border-left: 3px solid var(--river-pale);
+  }
+  .info-value .alert {
+    display: block;
+    font-size: 13px;
+    color: var(--berry-deep);
+    margin-top: 10px;
+    font-weight: 700;
+    background: #FFF0EC;
+    padding: 10px 14px;
+    border-radius: 6px;
+    border-left: 4px solid var(--berry);
+  }
+
+  /* ===== 日程・集合場所 ===== */
+  .schedule-section { background: var(--white); }
+  .schedule-legend {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 13px;
+    color: var(--gray);
+  }
+  .schedule-legend span {
+    display: inline-block;
+    margin: 4px 6px;
+    padding: 6px 12px;
+    background: var(--river-pale);
+    border: 1px solid var(--river-light);
+    border-radius: 12px;
+    font-weight: 700;
+    color: var(--river-deep);
+  }
+  .schedule-update {
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 14px;
+    color: white;
+    font-weight: 700;
+    background: var(--river-deep);
+    display: inline-block;
+    padding: 8px 20px;
+    border-radius: 20px;
+    margin-left: 50%;
+    transform: translateX(-50%);
+  }
+  .course-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .course-card {
+    background: white;
+    border: 2px solid var(--river);
+    border-radius: 12px;
+    padding: 0;
+    transition: 0.3s;
+    overflow: hidden;
+  }
+  .course-card:hover {
+    box-shadow: 0 8px 25px rgba(74,144,184,0.18);
+    transform: translateY(-4px);
+  }
+  .course-name {
+    background: var(--river);
+    color: white;
+    padding: 14px 22px;
+    font-weight: 900;
+    font-size: 18px;
+    letter-spacing: 0.1em;
+  }
+  .course-body {
+    padding: 24px 26px;
+  }
+  .course-meeting {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.9;
+    margin-bottom: 18px;
+    padding-bottom: 18px;
+    border-bottom: 2px dashed var(--river-light);
+  }
+  .course-dates h4 {
+    font-size: 13px;
+    color: var(--river-deep);
+    margin: 14px 0 8px;
+    font-weight: 900;
+    background: var(--river-pale);
+    padding: 5px 12px;
+    border-radius: 4px;
+    display: inline-block;
+  }
+  .course-dates ul li {
+    font-size: 14px;
+    color: var(--text);
+    padding: 8px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    font-weight: 600;
+  }
+  .course-dates ul li:last-child { border-bottom: none; }
+  .course-dates ul li .status {
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-weight: 900;
+    border: 1px solid;
+  }
+  .status.available { background: #E8F4DE; color: var(--mountain); border-color: var(--mountain); }
+  .status.few { background: #FFF3D6; color: var(--sun-deep); border-color: var(--sun-deep); }
+  .status.waiting { background: #FFE5DC; color: var(--berry-deep); border-color: var(--berry); }
+  .status.full { background: #E8E8E8; color: var(--gray); border-color: var(--gray); }
+
+  .local-meeting {
+    max-width: 950px;
+    margin: 35px auto 0;
+    background: white;
+    border: 2px solid var(--mountain);
+    padding: 25px 30px;
+    border-radius: 8px;
+    text-align: center;
+  }
+  .local-meeting h4 {
+    color: white;
+    background: var(--mountain);
+    font-size: 15px;
+    font-weight: 900;
+    margin: -25px -30px 18px;
+    padding: 12px 20px;
+    border-radius: 6px 6px 0 0;
+  }
+  .local-meeting p {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 2;
+  }
+  .local-meeting strong {
+    color: var(--mountain);
+    font-size: 16px;
+  }
+
+  /* ===== 重要表組み（共通） ===== */
+  .data-table-section { background: var(--base); }
+  .data-table-section.alt { background: var(--base-warm); }
+  .data-table-section + .data-table-section { padding-top: 30px; }
+  .data-table {
+    max-width: 950px;
+    margin: 0 auto;
+    background: white;
+    border: 2px solid var(--border-strong);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+  }
+  .data-row {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    border-bottom: 2px solid var(--border-strong);
+    align-items: stretch;
+  }
+  .data-row:last-child { border-bottom: none; }
+  .data-row-label {
+    background: var(--river-deep);
+    color: white;
+    font-weight: 900;
+    font-size: 15px;
+    padding: 24px 26px;
+    line-height: 1.6;
+    border-right: 2px solid var(--border-strong);
+    display: flex;
+    align-items: center;
+  }
+  .data-row-value {
+    padding: 24px 28px;
+    font-size: 14px;
+    color: var(--text);
+    line-height: 2;
+    background: white;
+  }
+  .data-row-value strong {
+    color: var(--river-deep);
+    font-weight: 700;
+  }
+  .data-row-value .price-num {
+    font-size: 18px;
+    font-weight: 900;
+    color: var(--river-deep);
+  }
+  .data-row-value .price-local {
+    color: var(--gray);
+    font-size: 13px;
+  }
+  .data-row-value ul { list-style: none; padding: 0; }
+  .data-row-value ul li {
+    padding: 8px 12px;
+    font-size: 14px;
+    color: var(--text);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    align-items: center;
+  }
+  .data-row-value ul li:last-child { border-bottom: none; }
+  .data-row-value ul li .percent {
+    color: var(--berry-deep);
+    font-weight: 900;
+    font-size: 14px;
+    white-space: nowrap;
+    background: #FFF0EC;
+    padding: 4px 12px;
+    border-radius: 4px;
+    border: 1px solid var(--berry);
+  }
+  .data-row-value ul li .free {
+    color: var(--mountain);
+    font-weight: 900;
+    background: #E8F4DE;
+    padding: 4px 12px;
+    border-radius: 4px;
+    border: 1px solid var(--mountain);
+  }
+  .data-row-value .highlight {
+    background: #FFF8E0;
+    padding: 12px 16px;
+    border-left: 4px solid var(--sun-deep);
+    border-radius: 4px;
+    margin: 8px 0;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .app-notes-box {
+    max-width: 950px;
+    margin: 25px auto 0;
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    padding: 25px 30px;
+  }
+  .app-notes-box p {
+    font-size: 14px;
+    line-height: 2;
+    color: var(--text);
+    margin-bottom: 12px;
+    padding-left: 20px;
+    text-indent: -20px;
+  }
+  .app-notes-box p:last-child { margin-bottom: 0; }
+  .app-notes-box .red-text {
+    color: var(--berry-deep);
+    font-weight: 900;
+    background: #FFF0EC;
+    padding: 2px 8px;
+    border-radius: 3px;
+  }
+
+  /* ===== お申込み方法（はっきり版） ===== */
+  .how-to { background: var(--white); }
+  .how-to-table {
+    max-width: 950px;
+    margin: 0 auto;
+    background: white;
+    border: 2px solid var(--border-strong);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+  }
+  .how-to-header {
+    background: var(--sun-deep);
+    color: white;
+    padding: 18px 26px;
+    font-size: 16px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .how-to-body {
+    padding: 28px 30px;
+  }
+  .how-to-body p {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 2;
+    margin-bottom: 16px;
+  }
+  .how-to-body .important {
+    background: #FFF8E0;
+    border-left: 4px solid var(--sun-deep);
+    padding: 14px 18px;
+    border-radius: 4px;
+    font-weight: 700;
+    margin-top: 18px;
+  }
+  .download-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 25px;
+    padding-top: 25px;
+    border-top: 2px dashed var(--border);
+  }
+  .download-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--river);
+    color: white;
+    padding: 14px 22px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 700;
+    transition: 0.3s;
+    border: 2px solid var(--river);
+  }
+  .download-link:hover {
+    background: var(--river-deep);
+    border-color: var(--river-deep);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(74,144,184,0.3);
+  }
+
+  /* ===== お問合せ（はっきり版・表組み統一） ===== */
+  .contact-info { background: var(--base-warm); }
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  .contact-table {
+    background: white;
+    border: 2px solid var(--border-strong);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+  }
+  .contact-table-header {
+    padding: 18px 24px;
+    color: white;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 15px;
+  }
+  .contact-table:nth-child(1) .contact-table-header { background: var(--river-deep); }
+  .contact-table:nth-child(2) .contact-table-header { background: var(--sun-deep); }
+  .contact-table-role {
+    background: #F0F4F0;
+    padding: 10px 24px;
+    font-size: 12px;
+    color: var(--gray);
+    font-weight: 600;
+    border-bottom: 2px solid var(--border-strong);
+  }
+  .contact-table-body {
+    padding: 22px 24px;
+  }
+  .contact-org {
+    font-size: 16px;
+    font-weight: 900;
+    color: var(--text);
+    margin-bottom: 14px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .contact-tel {
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--river-deep);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .contact-table:nth-child(2) .contact-tel { color: var(--sun-deep); }
+  .contact-hours {
+    font-size: 13px;
+    color: var(--gray);
+    margin-bottom: 14px;
+    line-height: 1.8;
+  }
+  .contact-mail {
+    font-size: 13px;
+    color: var(--text);
+    padding: 12px 14px;
+    background: var(--river-pale);
+    border: 1px solid var(--river-light);
+    border-radius: 6px;
+    margin-bottom: 10px;
+    word-break: break-all;
+    font-weight: 700;
+  }
+  .contact-table:nth-child(2) .contact-mail {
+    background: #FFF8E0;
+    border-color: var(--sun);
+  }
+  .contact-note {
+    font-size: 12px;
+    color: var(--gray);
+    line-height: 1.8;
+    padding: 10px 14px;
+    background: #FAFBF8;
+    border-radius: 4px;
+  }
+
+  /* ===== CTA ===== */
+  .cta {
+    background: linear-gradient(135deg, var(--river) 0%, var(--river-deep) 100%);
+    color: white;
+    text-align: center;
+    padding: 100px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta::before, .cta::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+  }
+  .cta::before {
+    width: 300px; height: 300px;
+    top: -100px; left: -50px;
+  }
+  .cta::after {
+    width: 200px; height: 200px;
+    bottom: -50px; right: -30px;
+  }
+  .cta-content {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .cta h2 {
+    font-size: clamp(26px, 3.5vw, 38px);
+    font-weight: 900;
+    margin-bottom: 18px;
+    color: white;
+  }
+  .cta h2 .marker {
+    background: var(--sun);
+    color: var(--text);
+    padding: 2px 14px;
+    border-radius: 8px;
+    display: inline-block;
+  }
+  .cta p {
+    font-size: 15px;
+    margin-bottom: 35px;
+    opacity: 0.95;
+    line-height: 1.9;
+  }
+  .btn-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--sun);
+    color: var(--text);
+    padding: 20px 50px;
+    border-radius: 50px;
+    font-weight: 900;
+    font-size: 18px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+    transition: 0.3s;
+  }
+  .btn-cta::after { content: '→'; transition: 0.3s; }
+  .btn-cta:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+    padding-right: 58px;
+    background: white;
+  }
+  .btn-cta:hover::after { transform: translateX(5px); }
+
+  /* ===== フッター ===== */
+  footer { background: #2C2419; color: white; padding: 50px 20px 20px; }
+  .footer-container { max-width: 1100px; margin: 0 auto; }
+  .footer-top {
+    display: grid; grid-template-columns: 2fr 1fr; gap: 40px;
+    margin-bottom: 40px;
+  }
+  .footer-info h4 { margin-bottom: 15px; color: var(--sun); }
+  .footer-info p { font-size: 13px; line-height: 1.8; color: #ccc; }
+  .footer-sns h4 { margin-bottom: 15px; color: var(--sun); font-size: 14px; }
+  .sns-row { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+  .sns-btn {
+    width: 60px; height: 60px;
+    display: flex; align-items: center; justify-content: center;
+    background: transparent !important;
+    border: none; outline: none;
+    transition: 0.3s;
+  }
+  .sns-btn img {
+    width: 100%; height: 100%; object-fit: contain;
+    transition: 0.3s;
+  }
+  .sns-btn:hover img { transform: scale(1.1); }
+  .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;
+    text-align: center; font-size: 12px; color: #888;
+  }
+
+  .pagetop {
+    position: fixed; bottom: 30px; right: 30px;
+    width: 50px; height: 50px; border-radius: 50%;
+    background: var(--river); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; box-shadow: 0 5px 15px rgba(74,144,184,0.4);
+    transition: 0.3s; z-index: 100;
+  }
+  .pagetop:hover {
+    background: var(--river-deep);
+    transform: translateY(-5px);
+  }
+
+  /* ===== レスポンシブ：タブレット ===== */
+  @media (max-width: 1024px) {
+    .features-grid { grid-template-columns: repeat(3, 1fr); }
+    .contact-grid { grid-template-columns: 1fr; gap: 20px; }
+  }
+
+  /* ===== レスポンシブ：スマホ ===== */
+  @media (max-width: 768px) {
+    .hero { margin-top: 60px; }
+.page-header { min-height: 240px; padding: 50px 18px; }
+.page-header-tag { font-size: 12px; padding: 6px 18px; margin-bottom: 14px; }
+.page-header h1 { font-size: 22px; line-height: 1.5; }
+.flyer-section { padding: 40px 15px 20px; }
+.breadcrumb { padding: 12px 20px; }
+
+    section { padding: 70px 15px; }
+
+    .about-grid { grid-template-columns: 1fr; gap: 30px; }
+    .about-text h3 { font-size: 18px; }
+
+    .values-intro { grid-template-columns: 1fr; gap: 30px; }
+    .values-block { padding: 25px 20px; }
+    .values-tag { font-size: 13px; padding: 8px 16px; }
+
+    .features-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+
+    .experience-grid { grid-template-columns: 1fr; gap: 20px; }
+
+    .info-block-header { padding: 40px 20px; }
+
+    .info-row { grid-template-columns: 1fr; }
+    .info-label {
+      padding: 14px 20px;
+      font-size: 13px;
+      border-right: none;
+      border-bottom: 2px solid var(--border-strong);
+    }
+    .info-value { padding: 18px 20px; font-size: 13px; }
+
+    .course-grid { grid-template-columns: 1fr; gap: 20px; }
+    .course-name { font-size: 16px; padding: 12px 18px; }
+    .course-body { padding: 20px 22px; }
+    .schedule-update { margin-left: 0; transform: none; display: block; max-width: fit-content; margin-left: auto; margin-right: auto; }
+
+    /* 表組み：スマホ対応 */
+    .data-row { grid-template-columns: 1fr; }
+    .data-row-label {
+      padding: 16px 20px;
+      font-size: 14px;
+      border-right: none;
+      border-bottom: 2px solid var(--border-strong);
+    }
+    .data-row-value { padding: 20px; font-size: 13px; }
+    .data-row-value ul li {
+      flex-direction: row;
+      gap: 10px;
+      font-size: 13px;
+      padding: 8px 6px;
+    }
+    .data-row-value ul li .percent,
+    .data-row-value ul li .free {
+      font-size: 12px;
+      padding: 3px 8px;
+    }
+    .app-notes-box { padding: 20px 22px; }
+    .app-notes-box p { font-size: 13px; }
+
+    .how-to-header { padding: 14px 20px; font-size: 14px; }
+    .how-to-body { padding: 22px 20px; }
+
+    .contact-table-header { padding: 14px 20px; font-size: 14px; }
+    .contact-table-body { padding: 20px; }
+    .contact-tel { font-size: 18px; }
+
+    .cta { padding: 70px 20px; }
+    .btn-cta { padding: 16px 36px; font-size: 16px; }
+
+    .footer-top { grid-template-columns: 1fr; gap: 25px; }
+    .sns-row { justify-content: space-around; gap: 8px; }
+    .sns-btn { width: 55px; height: 55px; }
+    .pagetop { width: 42px; height: 42px; font-size: 18px; bottom: 20px; right: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ヘッダー -->
+<header>
+  <div class="logo">
+    <a href="naturecore_mockup.html">
+      <img src="images/logo.png" alt="NPO法人 Naturecore">
+    </a>
+  </div>
+  <nav>
+    <ul id="navMenu">
+      <li><a href="#">活動内容</a></li>
+      <li><a href="https://naturecore.one/about-us/">私たちについて</a></li>
+      <li><a href="https://naturecore.one/photos/">ギャラリー</a></li>
+      <li><a href="#">お知らせ</a></li>
+      <li><a href="https://naturecore.one/contact/" class="nav-cta">お問合せ</a></li>
+    </ul>
+    <button class="menu-toggle" onclick="document.getElementById('navMenu').classList.toggle('open')">☰</button>
+  </nav>
+</header>
+
+<!-- ヒーロー -->
+<!-- ページヘッダー（写真背景） -->
+<section class="hero">
+  <div class="page-header">
+    <div class="page-header-inner">
+      <h1>2026清流王国郡上・夏休みこどもキャンプ</h1>
+    </div>
+  </div>
+</section>
+
+<!-- パンくず -->
+<div class="breadcrumb">
+  <div class="breadcrumb-container">
+    <a href="naturecore_mockup.html">ホーム</a> ＞ こどもキャンプ
+  </div>
+</div>
+
+<!-- チラシ画像 -->
+<section class="flyer-section">
+  <div class="hero-flyer">
+    <img src="images/26natu_main.png" alt="2026清流王国郡上 こどもキャンプ">
+  </div>
+</section>
+
+<!-- こどもキャンプとは？ -->
+<section class="about">
+  <div class="container">
+    <h2 class="section-title">こどもキャンプって<span class="marker">なに？</span></h2>
+    <p class="section-subtitle">郡上人と一緒に「見守り教育」を実践</p>
+
+    <div class="about-grid">
+      <div class="about-img">
+        <img src="images/camp_kanban.jpg" alt="清流王国郡上 子どもキャンプ 看板">
+      </div>
+      <div class="about-text">
+        <h3>貸切バスで、岐阜県の真ん中・郡上市へ。</h3>
+        <p>
+          こどもの<strong>「生み出す心」＋「楽しむ心」＋「分かち合う心」</strong>を大切に、
+          郡上人が中心となって「郡上・見守り教育」を実践するキャンプです。
+        </p>
+        <p>
+          集合地から解散まで、ずっとネイチャーコアのスタッフがこどもたちをサポートします。
+        </p>
+        <div class="about-highlight">
+          <h4>💡 プログラムはこどもが選ぶ</h4>
+          <p>
+            キャンプのプログラムは決まっていません。
+            当日、初めて出会ったこどもたちとスタッフが一緒にプログラムを考えて、
+            みんなでキャンプを創ります。
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- YouTube動画 -->
+<section class="video-section">
+  <div class="container">
+    <h2 class="section-title">キャンプの様子を<span class="marker">動画で見る</span></h2>
+    <p class="section-subtitle">こどもたちの笑顔と、郡上の自然</p>
+    <div class="video-wrapper">
+      <iframe
+        src="https://www.youtube.com/embed/QTJso29FL3g"
+        title="清流王国郡上 こどもキャンプ"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen></iframe>
+    </div>
+  </div>
+</section>
+
+<!-- 大切にしていること -->
+<section class="values">
+  <div class="container">
+    <h2 class="section-title">キャンプが<span class="marker">大切にしていること</span></h2>
+    <p class="section-subtitle">地域ぐるみの「見守り教育」</p>
+
+    <div class="values-intro">
+      <div class="values-img">
+        <img src="images/gotonakamatati.png" alt="郡上の仲間たち">
+      </div>
+      <div class="values-text">
+        <p>
+          郡上のこどもには昔から、自然の中で遊び、
+          <strong>高さ12mの橋から川へ飛び込む文化</strong>が今も息づいています。
+          それは、親がこどもを信じ、見守りながら子育てをしてきたからです。
+        </p>
+        <p>
+          このキャンプでは、一人ひとりが「発言」「話を聴く」場を設けます。
+          主に郡上在住のスタッフが見守りながら、こどもたちの可能性を引き出します。
+        </p>
+      </div>
+    </div>
+
+    <div class="values-blocks">
+      <div class="values-block">
+        <h3>💛 大切にする3つの心</h3>
+        <div class="values-tags">
+          <span class="values-tag">💡 生み出す心</span>
+          <span class="values-tag">🎉 楽しむ心</span>
+          <span class="values-tag">🤝 分かち合う心</span>
+        </div>
+      </div>
+      <div class="values-block mountain">
+        <h3>🌱 育む5つの力＋郷土愛</h3>
+        <div class="values-tags">
+          <span class="values-tag">🌱 自立力</span>
+          <span class="values-tag">🛡️ 危機管理能力</span>
+          <span class="values-tag">👂 聞く力</span>
+          <span class="values-tag">🚀 チャレンジ力</span>
+          <span class="values-tag">💬 コミュニケーション能力</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 見守りの特徴 -->
+<section class="features">
+  <div class="container">
+    <h2 class="section-title">見守りの<span class="marker">5つの特徴</span></h2>
+    <p class="section-subtitle">郡上ならではの良さ</p>
+    <div class="features-grid">
+      <div class="feature-item">
+        <div class="feature-icon">🏞️</div>
+        <h4>郡上の大自然で遊ぶ</h4>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🎨</div>
+        <h4>自分たちで遊びを作る</h4>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">💭</div>
+        <h4>振り返りの時間</h4>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">😄</div>
+        <h4>面白く頼りになるスタッフ</h4>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">📸</div>
+        <h4>キャンプ写真無料！！</h4>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- スケジュール画像 -->
+<section class="schedule">
+  <div class="container">
+    <h2 class="section-title">2泊・3泊キャンプの<span class="marker">基本スケジュール</span></h2>
+    <p class="section-subtitle">日々の流れをチェック</p>
+    <div class="schedule-img">
+      <img src="images/23natu_campTS2.gif" alt="2泊3泊キャンプの基本スケジュール">
+    </div>
+    <p class="schedule-note">
+      ※こどもたち自発性・創造性を優先して遊びの内容などを決めるため、また個々の選択や天候によってプログラムが変更します。<br>
+      ※掲載の写真は過去のキャンプの様子で、イメージです。実際のプログラムとは異なります。
+    </p>
+  </div>
+</section>
+
+<!-- 体験メニュー -->
+<section class="experience">
+  <div class="container">
+    <div style="text-align: center;">
+      <span class="experience-badge">3泊4日限定メニュー</span>
+    </div>
+    <h2 class="section-title">みんなで挑戦！<span class="marker">体験メニュー</span></h2>
+    <p class="section-subtitle">郡上ならではの特別な体験</p>
+
+    <div class="experience-grid">
+      <div class="exp-card">
+        <div class="exp-photo">
+          <div class="exp-num">01</div>
+        </div>
+        <div class="exp-body">
+          <span class="exp-tag">レッツ！チャレンジ！</span>
+          <h3>シャワークライミング<br>（沢のぼり）</h3>
+          <p>
+            清流のキレイな川に住む、アユやアマゴなどがたくさんの魚などを見ながら、
+            少し流れのある川をのぼっていきます！
+            みんなで協力しながら助け合い、チャレンジしながら川を制覇しよう！
+          </p>
+          <p class="exp-note">※川の増水や天候によりなど安全面において、体験が行えない場合もございます</p>
+        </div>
+      </div>
+      <div class="exp-card">
+        <div class="exp-photo">
+          <div class="exp-num">02</div>
+        </div>
+        <div class="exp-body">
+          <span class="exp-tag">地元の農家さんで</span>
+          <h3>野菜もぎとり体験＆<br>夏野菜カレーづくり</h3>
+          <p>
+            キャンプ場から歩いて地域の方の農園に行き、
+            夏にとれる旬の夏野菜の収穫や農園の雑草抜きなどのお手伝いをします！
+            採れたての夏野菜を使って、夏野菜ゴロゴロカレーライス作りにも挑戦します！
+          </p>
+          <p class="exp-note">※天候などにより、安全面において体験が行えない場合もございます</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 後援 -->
+<section class="sponsor">
+  <div class="container">
+    <div class="sponsor-box">
+      <h3>📜 後援</h3>
+      <p>
+        岐阜県教育委員会／大垣市教育委員会／美濃市教育委員会／羽島市教育委員会／
+        尾張旭市教育委員会／瑞穂市教育委員会／美濃加茂市教育委員会／郡上市教育委員会／
+        愛知県教育委員会／名古屋市教育委員会／長久手市教育委員会
+      </p>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- 旅行の仕組み -->
+<section class="info">
+  <div class="container">
+    <h2 class="section-title">旅行の<span class="marker">仕組み</span></h2>
+    <p class="section-subtitle">参加対象・定員・場所など</p>
+
+    <div class="info-table">
+      <div class="info-row">
+        <div class="info-label"><span class="icon">👦</span>参加対象</div>
+        <div class="info-value">
+          小学1年生〜中学3年生
+        </div>
+      </div>
+      <div class="info-row">
+        <div class="info-label"><span class="icon">👥</span>定員</div>
+        <div class="info-value">
+          2泊3日・3泊4日：45名様／催行最少人員30名
+          <span class="sub">定員を超えた場合は、抽選となります。</span>
+        </div>
+      </div>
+      <div class="info-row">
+        <div class="info-label"><span class="icon">🚌</span>参加形態</div>
+        <div class="info-value">
+          こどもだけで参加
+          <span class="sub">集合地から当法人のスタッフが同行し、全行程を引率します。<br>※添乗員は同行しません。</span>
+          <span class="sub">朝の集合からお別れまで全行程ネイチャーコアのスタッフがお世話いたします。現地では最低8人のスタッフがサポートします。</span>
+          <span class="alert">※アレルギーのあるお子さま、障がいのあるお子さま、過去に喘息発作のあったお子さまは必ずお申込前にご相談ください。</span>
+        </div>
+      </div>
+      <div class="info-row">
+        <div class="info-label"><span class="icon">📍</span>実施場所</div>
+        <div class="info-value">岐阜県 郡上市 八幡町</div>
+      </div>
+      <div class="info-row">
+        <div class="info-label"><span class="icon">🏕️</span>宿泊地</div>
+        <div class="info-value">
+          郡上八幡憩いの家 周辺
+          <span class="sub">テント泊・寝袋で寝ます。</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 集合場所と日程 -->
+<section class="schedule-section">
+  <div class="container">
+    <h2 class="section-title">集合場所と<span class="marker">日程</span></h2>
+    <p class="section-subtitle">A〜D日程＋現地集合からお選びいただけます</p>
+
+    <div style="text-align:center;">
+      <p class="schedule-update">📅 6/2 10:30 現在</p>
+    </div>
+
+    <div class="schedule-legend">
+      <span>◯ 半数以上空きあり</span>
+      <span>△ 残りわずか</span>
+      <span>◇ キャンセル待ち</span>
+      <span>満 満席</span>
+    </div>
+
+    <div class="course-grid">
+      <div class="course-card">
+        <div class="course-name">A日程</div>
+        <div class="course-body">
+          <p class="course-meeting">
+            藤が丘駅 7:45集合／18:15頃解散<br>
+            JR春日井駅 8:30集合／17:30頃解散<br>
+            江南駅 9:30集合／16:30頃解散
+          </p>
+          <div class="course-dates">
+            <h4>2泊3日</h4>
+            <ul>
+              <li>7/22（水）発<span class="status full">バス満／現地満</span></li>
+              <li>8/28（金）発<span class="status few">バス△／現地△</span></li>
+            </ul>
+            <h4>3泊4日</h4>
+            <ul>
+              <li>8/8（土）発<span class="status waiting">キャンセル待ち</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="course-card">
+        <div class="course-name">B日程</div>
+        <div class="course-body">
+          <p class="course-meeting">
+            大垣駅 8:00集合／17:15解散<br>
+            JR岐阜駅 8:45集合／16:30解散<br>
+            各務原市民公園 9:30集合／15:45解散
+          </p>
+          <div class="course-dates">
+            <h4>2泊3日</h4>
+            <ul>
+              <li>7/30（木）発<span class="status full">バス満／現地満</span></li>
+              <li>8/24（月）発<span class="status few">バス満／現地△</span></li>
+            </ul>
+            <h4>3泊4日</h4>
+            <ul>
+              <li>8/3（月）発<span class="status full">バス満／現地満</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="course-card">
+        <div class="course-name">C日程</div>
+        <div class="course-body">
+          <p class="course-meeting">
+            尾張旭駅 7:45集合／18:15頃解散<br>
+            小牧駅 8:45集合／17:15頃解散<br>
+            名鉄一宮駅 9:30集合／16:15頃解散
+          </p>
+          <div class="course-dates">
+            <h4>2泊3日</h4>
+            <ul>
+              <li>7/26（日）発<span class="status waiting">キャンセル待ち</span></li>
+              <li>8/20（木）発<span class="status waiting">キャンセル待ち</span></li>
+            </ul>
+            <h4>3泊4日</h4>
+            <ul>
+              <li>8/15（土）発<span class="status waiting">キャンセル待ち</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="course-card">
+        <div class="course-name">D日程</div>
+        <div class="course-body">
+          <p class="course-meeting">
+            名古屋駅 7:30集合／18:30頃解散<br>
+            多治見駅 8:30集合／17:30頃解散<br>
+            土岐駅 9:00集合／17:15頃解散<br>
+            可児駅 10:00集合／16:30頃解散
+          </p>
+          <div class="course-dates">
+            <h4>2泊3日</h4>
+            <ul>
+              <li>7/18（土）発<span class="status few">バス◇／現地△</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="local-meeting">
+      <h4>📍 現地集合</h4>
+      <p>
+        2泊3日・3泊4日：ベイホックトラベル・現地集合<br>
+        <strong>11:30集合／14:30頃 解散</strong><br>
+        ☆現地集合は、上記の全日程で若干名募集します。
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- 旅行代金 -->
+<section class="data-table-section">
+  <div class="container">
+    <h2 class="section-title">旅行<span class="marker">代金</span></h2>
+    <p class="section-subtitle">料金・取消料・保険について</p>
+
+    <div class="data-table">
+      <div class="data-row">
+        <div class="data-row-label">2泊3日の<br>旅行代金</div>
+        <div class="data-row-value">
+          <span class="price-num">39,800円</span>　<span class="price-local">（現地集合：38,800円）</span>
+        </div>
+      </div>
+
+      <div class="data-row">
+        <div class="data-row-label">3泊4日の<br>旅行代金</div>
+        <div class="data-row-value">
+          <span class="price-num">45,800円</span>　<span class="price-local">（現地集合：44,800円）</span>
+        </div>
+      </div>
+
+      <div class="data-row">
+        <div class="data-row-label">旅行代金に<br>含まれるもの</div>
+        <div class="data-row-value">
+          <strong>【2泊3日】</strong>①体験料 ②バス料金 ③保険料 ④施設及び機材・道具等使用料 ⑤消費税 ⑥2泊6食（朝2 昼2 夕2／内1食自炊）<br>
+          <strong>【3泊4日】</strong>2泊の①〜⑤と合わせて ⑥3泊9食（朝3 昼3 夕3／内1食自炊）
+        </div>
+      </div>
+
+      <div class="data-row">
+        <div class="data-row-label">取消料</div>
+        <div class="data-row-value">
+          <ul>
+            <li><span>出発日の21日前まで</span><span class="free">無料</span></li>
+            <li><span>出発日の20〜8日前</span><span class="percent">旅行代金の20%</span></li>
+            <li><span>出発日の7〜2日前</span><span class="percent">旅行代金の30%</span></li>
+            <li><span>出発日の前日</span><span class="percent">旅行代金の40%</span></li>
+            <li><span>出発日当日〜集合時間まで</span><span class="percent">旅行代金の50%</span></li>
+            <li><span>出発後または無連絡不参加</span><span class="percent">旅行代金の100%</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="data-row">
+        <div class="data-row-label">旅行代金に<br>含まれる保険</div>
+        <div class="data-row-value">
+          当企画旅行は、全旅協旅行災害保証制度により、特別保証とは別に、<br>
+          <div class="highlight">傷害死亡 1,000万円／入院日額 4,000円／通院日額 2,500円が保障されます。</div>
+          この内容以上の補償を希望されるお客様は、各自でご加入いただくことをお勧めいたします。
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 旅行企画・実施 -->
+<section class="data-table-section alt">
+  <div class="container">
+    <h2 class="section-title">旅行<span class="marker">企画・実施</span></h2>
+    <p class="section-subtitle">旅行会社情報</p>
+
+    <div class="data-table">
+      <div class="data-row">
+        <div class="data-row-label">
+          この旅行は、<br>
+          標準旅行業約款<br>
+          （募集型企画旅行契約）<br>
+          に準じます。
+        </div>
+        <div class="data-row-value">
+          <strong>株式会社ベイホックトラベル</strong><br>
+          岐阜県知事登録旅行業第2-122号<br>
+          全国旅行業協会正会員<br>
+          tel. (050)3746-5669<br>
+          〒501-4236<br>
+          岐阜県郡上市八幡町相生1112-1<br>
+          総合旅行業務取扱管理者　武藤みさを
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- お申込み受付 -->
+<section class="data-table-section">
+  <div class="container">
+    <h2 class="section-title">お申込み受付<span class="marker">第1次募集</span></h2>
+    <p class="section-subtitle">受付期間と注意事項</p>
+
+    <div class="data-table">
+      <div class="data-row">
+        <div class="data-row-label">日時</div>
+        <div class="data-row-value">
+          <span class="price-num">5/16（土）10:00 〜 5/23（土）17:00</span>　まで、募集受付いたします。
+        </div>
+      </div>
+    </div>
+
+    <div class="app-notes-box">
+      <p>
+        ◆※第一次お申込み結果は、<span class="red-text">5月31日ごろ</span>までに、メールまたは電話でご連絡いたします。万が一、連絡が来ない場合には、㈱ベイホックトラベルまでご連絡ください。
+      </p>
+      <p>
+        ◆申込受付け後の流れについては、お申し込みフォームの中に記載しておりますので、ご確認ください。
+      </p>
+      <p>
+        ◆定員に達しない日程については、<span class="red-text">6月1日10:00から第二次募集（先着順）</span>をいたします。
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- お申込み方法（はっきり版） -->
+<section class="how-to">
+  <div class="container">
+    <h2 class="section-title">お申込み<span class="marker">方法</span></h2>
+    <p class="section-subtitle">WEBのみ受付いたします</p>
+
+    <div class="how-to-table">
+      <div class="how-to-header">
+        📱 WEBのみお申込み受付いたします
+      </div>
+      <div class="how-to-body">
+        <p>
+          下記のリンクより『お申し込みフォーム』でネット申込み、
+          またはチラシ記載の申込書を記入の上、封筒で㈱ベイホックトラベルまで郵送（第一次募集のみ）でお申し込みください。
+        </p>
+        <div class="important">
+          📌 件名に「こどもキャンプのお問い合わせ」・内容に『参加（希望）コース・申込保護者氏名』を必ずご記入の上、お問い合わせください。
+        </div>
+        <div class="download-links">
+          <a href="#" class="download-link">📄 旅行条件書PDF</a>
+          <a href="#" class="download-link">📄 こどもキャンプ募集チラシPDF</a>
+          <a href="#" class="download-link">📝 こどもキャンプお申込みフォーム</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- お問合せ（はっきり版・表組み統一） -->
+<section class="contact-info">
+  <div class="container">
+    <h2 class="section-title">お問合せ<span class="marker">先</span></h2>
+    <p class="section-subtitle">内容によって連絡先が異なります</p>
+
+    <div class="contact-grid">
+      <div class="contact-table">
+        <div class="contact-table-header">
+          🎫 旅行のお申込み・お問合せ
+        </div>
+        <div class="contact-table-role">
+          日程・料金・キャンセル等
+        </div>
+        <div class="contact-table-body">
+          <div class="contact-org">㈱ベイホックトラベル</div>
+          <div class="contact-tel">📞 050-3746-5669</div>
+          <div class="contact-hours">受付：10:00〜17:00（土日祝除く）</div>
+          <div class="contact-mail">📧 info※beihokku.jp</div>
+          <div class="contact-note">
+            ※を＠に変えてください<br>
+            件名に「こどもキャンプのお問い合わせ」と明記
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-table">
+        <div class="contact-table-header">
+          🏕️ プログラム内容・現地の様子
+        </div>
+        <div class="contact-table-role">
+          活動内容・キャンプの様子について
+        </div>
+        <div class="contact-table-body">
+          <div class="contact-org">NPO法人 NATURECORE（ネイチャーコア）</div>
+          <div class="contact-tel">📞 ―</div>
+          <div class="contact-hours">受付：平日10:00〜17:00（土日祝除く）<br>FAX：050-3606-0236</div>
+          <div class="contact-mail">📋 Naturecore お問合せフォーム</div>
+          <div class="contact-note">
+            件名に「こどもキャンプのお問い合わせ」と明記
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <div class="cta-content">
+    <h2>この夏、<span class="marker">"おもろい"</span>を見つけにいこう。</h2>
+    <p>
+      ぐじょうに集まった なかまと、<br>
+      せかいにひとつだけのキャンプをつくろう！
+    </p>
+    <a href="https://naturecore.one/summercamp2026/" class="btn-cta">お申込みはこちら</a>
+  </div>
+</section>
+
+<!-- フッター -->
+<footer>
+  <div class="footer-container">
+    <div class="footer-top">
+      <div class="footer-info">
+        <h4>NPO法人 Naturecore</h4>
+        <p>
+          自然の中であそぶ楽しさを体感しながら、あそび心で人と自然をつなぐ。<br>
+          清流王国・郡上を拠点に活動しています。
+        </p>
+      </div>
+      <div class="footer-sns">
+        <h4>SNS / BLOG</h4>
+        <div class="sns-row">
+          <a href="https://www.facebook.com/Naturecore2022" class="sns-btn" title="Facebook">
+            <img src="images/facebook.png" alt="Facebook">
+          </a>
+          <a href="https://www.instagram.com/naturecore2022/" class="sns-btn" title="Instagram">
+            <img src="images/instagram.png" alt="Instagram">
+          </a>
+          <a href="https://line.me/R/ti/p/@kld3139z" class="sns-btn" title="LINE">
+            <img src="images/line.png" alt="LINE">
+          </a>
+          <a href="https://naturecore.one/category/camp/" class="sns-btn" title="Blog">
+            <img src="images/blog.png" alt="Blog">
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      © 2026 NPO法人 Naturecore. All Rights Reserved.
+    </div>
+  </div>
+</footer>
+
+<a href="#" class="pagetop">↑</a>
+
+</body>
+</html>
