@@ -295,7 +295,7 @@ class Game {
                 e.stomp(this, p);
                 p.stompBounce(this.input.held('jump'));
                 this.particles.puff(p.x + p.w / 2, e.y);
-            } else if (p.invuln <= 0 && !(e.ignorePlayer > 0)) {
+            } else if (p.invuln <= 0 && !(e.ignorePlayer > 0) && !(e.invuln > 0)) {
                 const died = p.hurt();
                 if (died) this.startDeath();
                 else this.sound.hurt();

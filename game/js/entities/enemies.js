@@ -331,12 +331,14 @@ export class Lulu extends Enemy {
 
 // ゆいちゃんが投げるハート (放物線を描いて飛んでくる)
 export class HeartShot extends Enemy {
-    constructor(x, y, vx) {
+    constructor(x, y, vx, beam = false) {
         super(x / TS * TS, y, 18, 18);
         this.x = x;
         this.y = y;
         this.vx = vx;
-        this.vy = -360;
+        this.beam = beam;             // ハートビーム: まっすぐ高速で飛ぶ
+        this.vy = beam ? 0 : -360;
+        this.life = 2.4;
         this.active = true;
     }
 
@@ -348,9 +350,15 @@ export class HeartShot extends Enemy {
             if (this.y > level.pixelHeight + 100) this.removed = true;
             return;
         }
-        this.vy = Math.min(this.vy + 1400 * dt, 700);
-        this.x += this.vx * dt;
-        this.y += this.vy * dt;
+        if (this.beam) {
+            this.x += this.vx * dt;
+            this.life -= dt;
+            if (this.life <= 0) this.removed = true;
+        } else {
+            this.vy = Math.min(this.vy + 1400 * dt, 700);
+            this.x += this.vx * dt;
+            this.y += this.vy * dt;
+        }
         const col = Math.floor((this.x + this.w / 2) / TS);
         const row = Math.floor((this.y + this.h / 2) / TS);
         if (level.isSolid(col, row)) this.removed = true;
@@ -367,8 +375,20 @@ export class HeartShot extends Enemy {
     }
 
     render(c, camX) {
-        const wob = Math.sin(this.anim * 14) * 2;
-        drawHeart(c, this.x + this.w / 2 - camX, this.y + this.h / 2 + wob, 11);
+        const cx = this.x + this.w / 2 - camX;
+        const cy = this.y + this.h / 2;
+        if (this.beam) {
+            // 残像つきのビーム表現
+            c.globalAlpha = 0.25;
+            drawHeart(c, cx - Math.sign(this.vx) * 26, cy, 10);
+            c.globalAlpha = 0.5;
+            drawHeart(c, cx - Math.sign(this.vx) * 13, cy, 11);
+            c.globalAlpha = 1;
+            drawHeart(c, cx, cy, 13, '#ff2d6a');
+        } else {
+            const wob = Math.sin(this.anim * 14) * 2;
+            drawHeart(c, cx, cy + wob, 11);
+        }
     }
 }
 
@@ -382,7 +402,9 @@ export class Yui extends Enemy {
         this.invuln = 0;
         this.defeated = false;
         this.jumpTimer = 2;
-        this.throwTimer = 2.5;
+        this.throwTimer = 1.2;
+        this.attackCount = 0;
+        this.fireHits = 0;
         this.dir = -1;
     }
 
@@ -412,14 +434,23 @@ export class Yui extends Enemy {
             this.jumpTimer = 1.8 + Math.random() * 1.2;
         }
 
-        // プレイヤーが遠いときはハートを投げる
+        // プレイヤーが離れているとハート攻撃 (3回に1回はハートビーム)
         this.throwTimer -= dt;
         if (game && player && !stunned && this.throwTimer <= 0 &&
-            Math.abs(player.x - this.x) > 140) {
-            this.throwTimer = 2.4 + Math.random() * 0.8;
-            const vx = (player.x > this.x ? 1 : -1) * (200 + Math.random() * 60);
-            game.enemies.push(new HeartShot(this.x + this.w / 2, this.y + 6, vx));
-            game.sound.kick();
+            Math.abs(player.x - this.x) > 120) {
+            this.throwTimer = 2.0 + Math.random() * 0.7;
+            this.attackCount++;
+            const dir = player.x > this.x ? 1 : -1;
+            if (this.attackCount % 3 === 0 || this.hp <= 1) {
+                // ハートビーム: プレイヤーの高さへまっすぐ高速で飛ぶ
+                game.enemies.push(new HeartShot(
+                    this.x + this.w / 2, this.y + 30, dir * 390, true));
+                game.sound.fireball();
+            } else {
+                const vx = dir * (200 + Math.random() * 60);
+                game.enemies.push(new HeartShot(this.x + this.w / 2, this.y + 6, vx));
+                game.sound.kick();
+            }
         }
     }
 
@@ -439,7 +470,18 @@ export class Yui extends Enemy {
     }
 
     stomp(game) { this.takeHit(game); }
-    hitByFireball(game) { this.takeHit(game); }
+
+    // ファイアボールは効きにくい: 4発当ててハート1つ
+    hitByFireball(game) {
+        if (this.defeated || this.invuln > 0) return;
+        this.fireHits++;
+        if (this.fireHits >= 4) {
+            this.fireHits = 0;
+            this.takeHit(game);
+        } else {
+            game.addScore(50, this.x, this.y);
+        }
+    }
 
     render(c, camX, time) {
         // 被弾中は点滅
