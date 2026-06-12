@@ -375,7 +375,7 @@ export class HeartShot extends Enemy {
 // ボス: ゆいちゃん (ボブヘアの女の子)。3回踏むと なかなおり できる
 export class Yui extends Enemy {
     constructor(x, y) {
-        super(x, y, 44, 58);
+        super(x, y, 56, 86);
         this.boss = true;
         this.hp = 3;
         this.maxHp = 3;

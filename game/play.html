@@ -762,9 +762,9 @@ function build() {
         osushiFlat: make(px(OSUSHI_FLAT, OSUSHI_PAL)),
         lulu1: make(px(LULU_1, LULU_PAL)),
         lulu2: make(px(LULU_2, LULU_PAL)),
-        yui1: make(px(YUI_1, YUI_PAL)),
-        yui2: make(px(YUI_2, YUI_PAL)),
-        yuiDizzy: make(px(YUI_DIZZY, YUI_PAL)),
+        yui1: make(px(YUI_1, YUI_PAL, 3)),
+        yui2: make(px(YUI_2, YUI_PAL, 3)),
+        yuiDizzy: make(px(YUI_DIZZY, YUI_PAL, 3)),
         mushroom: px(MUSHROOM, ITEM_PAL),
         oneup: px(MUSHROOM, ONEUP_PAL),
         flower: px(FLOWER, ITEM_PAL),
@@ -1946,7 +1946,7 @@ class HeartShot extends Enemy {
 // ボス: ゆいちゃん (ボブヘアの女の子)。3回踏むと なかなおり できる
 class Yui extends Enemy {
     constructor(x, y) {
-        super(x, y, 44, 58);
+        super(x, y, 56, 86);
         this.boss = true;
         this.hp = 3;
         this.maxHp = 3;
@@ -2503,8 +2503,8 @@ const LEVEL4_DATA = {
         b.row(T.HARD, 42, 45, 11);
         b.coins(28, 31, 7);
 
-        // おたすけパワーアップ
-        b.q(7, 11, 'power');
+        // おたすけ: 確定ファイアフラワー
+        b.q(7, 11, 'flower');
 
         // ボス
         b.enemy('yui', 48);
@@ -2623,6 +2623,10 @@ class Game {
                 this.addCoin();
             } else if (content === 'life') {
                 this.items.push(new Mushroom(col, row, 'life'));
+                this.sound.sprout();
+            } else if (content === 'flower') {
+                // 確定ファイアフラワー
+                this.items.push(new Flower(col, row));
                 this.sound.sprout();
             } else if (player.form === 'small') {
                 this.items.push(new Mushroom(col, row, 'power'));
@@ -2792,7 +2796,7 @@ class Game {
                 e.active = e.x < this.camera.x + this.camera.viewW + 64;
                 continue;
             }
-            e.update(dt, this.level, p);
+            e.update(dt, this.level, p, this);
             if (e.removed || !e.alive || p.dead) continue;
             if (!this.overlap(p, e)) continue;
 
@@ -2833,9 +2837,9 @@ class Game {
                     this.sound.oneUp();
                     this.popups.push(new ScorePopup(it.x, it.y, '1UP!'));
                 } else {
-                    if (p.form === 'small') p.setForm('big');
-                    else if (it instanceof Flower) p.setForm('fire');
-                    else if (p.form === 'big') p.setForm('fire');
+                    // フラワーはどの状態からでもファイアまろんになれる
+                    if (it instanceof Flower) p.setForm('fire');
+                    else if (p.form === 'small') p.setForm('big');
                     this.sound.powerup();
                     this.addScore(1000, it.x, it.y);
                 }

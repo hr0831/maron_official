@@ -21,8 +21,8 @@ export default {
         b.row(T.HARD, 42, 45, 11);
         b.coins(28, 31, 7);
 
-        // おたすけパワーアップ
-        b.q(7, 11, 'power');
+        // おたすけ: 確定ファイアフラワー
+        b.q(7, 11, 'flower');
 
         // ボス
         b.enemy('yui', 48);
