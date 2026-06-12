@@ -1945,16 +1945,15 @@ const LEVEL1_DATA = {
         b.q(24, 11, 'coin');
         b.brick(25, 11);
         b.q(23, 7, 'coin');
-        b.enemy('kuri', 24);
-        b.enemy('kuri', 28);
+        b.enemy('osushi', 26);
 
         // 土管ゾーン
         b.pipe(32, 2);
         b.pipe(39, 3);
         b.pipe(47, 4);
-        b.enemy('kuri', 36);
-        b.enemy('kuri', 43);
-        b.enemy('kame', 53);
+        b.enemy('kiiro', 36);
+        b.enemy('osushi', 43);
+        b.enemy('lulu', 53);
         b.enemy('kiiro', 58);
         b.coins(50, 53, 10);
 
@@ -1963,23 +1962,22 @@ const LEVEL1_DATA = {
         b.q(78, 11, 'coin');
         b.brick(79, 11);
         b.q(78, 7, 'life');
-        b.enemy('kuri', 81);
-        b.enemy('kuri', 83);
+        b.enemy('osushi', 81);
+        b.enemy('kiiro', 83);
 
         // 2つ目の谷 (87-89) の先: ブロックの空中回廊
         b.bricks(94, 98, 11);
         b.coins(94, 98, 7);
         b.q(104, 11, 'power');
         b.enemy('osushi', 102);
-        b.enemy('kuri', 100);
-        b.enemy('kuri', 107);
-        b.enemy('kuri', 110);
+        b.enemy('kiiro', 107);
+        b.enemy('osushi', 110);
 
         // 階段の丘
         b.stairsUp(116, 4);
         b.stairsDown(122, 4);
         b.enemy('lulu', 127);
-        b.enemy('kame', 128);
+        b.enemy('osushi', 129);
         b.pipe(132, 2);
         b.enemy('kiiro', 137);
         b.coins(136, 140, 9);
@@ -1987,9 +1985,9 @@ const LEVEL1_DATA = {
         // ゴール前ラッシュ
         b.bricks(143, 145, 11);
         b.q(144, 7, 'coin');
-        b.enemy('kame', 148);
-        b.enemy('kuri', 152);
-        b.enemy('kuri', 154);
+        b.enemy('osushi', 148);
+        b.enemy('kiiro', 152);
+        b.enemy('osushi', 155);
         b.coins(156, 158, 11);
 
         // ゴール (旗 + 城)
@@ -2022,22 +2020,23 @@ const LEVEL2_DATA = {
         b.coins(12, 16, 10);
         b.bricks(19, 23, 8);
         b.coins(19, 23, 7);
-        b.enemy('kuri', 18);
-        b.enemy('kuri', 21);
+        b.enemy('kiiro', 18);
+        b.enemy('osushi', 21);
 
         // ハテナとレンガの通路
         b.enemy('kiiro', 26);
         b.q(28, 11, 'power');
         b.bricks(30, 36, 11);
         b.coins(31, 35, 13);
-        b.enemy('kame', 33);
+        b.enemy('osushi', 33);
 
         // 段差のある洞窟内部
         b.row(T.HARD, 40, 44, 14);
         b.row(T.HARD, 42, 44, 13);
         b.coins(40, 44, 11);
-        b.enemy('kuri', 48);
-        b.enemy('kuri', 50);
+        b.enemy('kiiro', 48);
+        b.enemy('osushi', 51);
+        b.enemy('lulu', 42);
         b.pipe(54, 3);
 
         // 谷 1 (60-62): 跳び越える
@@ -2046,13 +2045,13 @@ const LEVEL2_DATA = {
         // 中盤: 高低差ゾーン
         b.bricks(66, 70, 11);
         b.q(68, 7, 'coin');
-        b.enemy('kame', 72);
+        b.enemy('kiiro', 72);
         b.row(T.HARD, 76, 79, 12);
         b.row(T.HARD, 82, 85, 9);
         b.coins(82, 85, 7);
         b.enemy('osushi', 80);
-        b.enemy('kuri', 88);
-        b.enemy('kuri', 91);
+        b.enemy('kiiro', 88);
+        b.enemy('osushi', 91);
         b.q(94, 11, 'life');
         b.enemy('lulu', 96);
 
@@ -2064,9 +2063,8 @@ const LEVEL2_DATA = {
         b.bricks(110, 117, 7);
         b.coins(110, 117, 6);
         b.q(114, 11, 'power');
-        b.enemy('kame', 119);
-        b.enemy('kuri', 123);
-        b.enemy('kuri', 126);
+        b.enemy('osushi', 119);
+        b.enemy('kiiro', 123);
         b.pipe(130, 2);
         b.enemy('osushi', 134);
         b.coins(134, 137, 10);
@@ -2075,8 +2073,8 @@ const LEVEL2_DATA = {
         b.coins(140, 143, 9);
 
         // 出口へ
-        b.enemy('kame', 148);
-        b.enemy('kuri', 151);
+        b.enemy('kiiro', 148);
+        b.enemy('osushi', 151);
         b.bricks(150, 153, 11);
         b.q(152, 11, 'coin');
         b.stairsUp(155, 3);
@@ -2107,14 +2105,13 @@ const LEVEL3_DATA = {
         b.row(T.HARD, 25, 28, 10);
         b.coins(25, 28, 8);
         b.row(T.HARD, 32, 35, 12);
-        b.enemy('kame', 33, 11);
+        b.enemy('osushi', 33, 11);
 
         // 小島 1
         b.ground(38, 48);
         b.q(43, 11, 'power');
         b.enemy('kiiro', 41);
-        b.enemy('kuri', 44);
-        b.enemy('kuri', 46);
+        b.enemy('osushi', 44);
 
         // 空中ステップ 2
         b.row(T.HARD, 52, 54, 12);
@@ -2122,10 +2119,11 @@ const LEVEL3_DATA = {
         b.coins(58, 60, 8);
         b.row(T.HARD, 64, 66, 12);
 
-        // 小島 2: 土管とカメ
+        // 小島 2: 土管とルルちゃん
         b.ground(69, 80);
         b.pipe(73, 2);
-        b.enemy('kame', 78);
+        b.enemy('osushi', 78);
+        b.enemy('lulu', 75);
         b.q(76, 10, 'coin');
 
         // 空中ステップ 3 (ジグザグ)
@@ -2140,22 +2138,21 @@ const LEVEL3_DATA = {
         b.bricks(107, 110, 11);
         b.q(108, 11, 'power');
         b.q(110, 7, 'life');
-        b.enemy('kuri', 111);
-        b.enemy('kame', 106);
+        b.enemy('kiiro', 111);
+        b.enemy('osushi', 106);
 
         // 連続ロングジャンプ
         b.row(T.HARD, 118, 121, 12);
         b.row(T.HARD, 124, 127, 12);
-        b.enemy('kuri', 125, 11);
+        b.enemy('osushi', 125, 11);
         b.row(T.HARD, 130, 133, 12);
         b.coins(118, 133, 9);
 
         // 小島 4: 最後の試練
         b.ground(136, 150);
         b.stairsUp(140, 3);
-        b.enemy('kame', 146);
+        b.enemy('kiiro', 146);
         b.enemy('osushi', 143);
-        b.enemy('kuri', 148);
         b.q(144, 8, 'coin');
 
         // ラストの空中回廊

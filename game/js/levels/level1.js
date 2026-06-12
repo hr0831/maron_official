@@ -26,16 +26,15 @@ export default {
         b.q(24, 11, 'coin');
         b.brick(25, 11);
         b.q(23, 7, 'coin');
-        b.enemy('kuri', 24);
-        b.enemy('kuri', 28);
+        b.enemy('osushi', 26);
 
         // 土管ゾーン
         b.pipe(32, 2);
         b.pipe(39, 3);
         b.pipe(47, 4);
-        b.enemy('kuri', 36);
-        b.enemy('kuri', 43);
-        b.enemy('kame', 53);
+        b.enemy('kiiro', 36);
+        b.enemy('osushi', 43);
+        b.enemy('lulu', 53);
         b.enemy('kiiro', 58);
         b.coins(50, 53, 10);
 
@@ -44,23 +43,22 @@ export default {
         b.q(78, 11, 'coin');
         b.brick(79, 11);
         b.q(78, 7, 'life');
-        b.enemy('kuri', 81);
-        b.enemy('kuri', 83);
+        b.enemy('osushi', 81);
+        b.enemy('kiiro', 83);
 
         // 2つ目の谷 (87-89) の先: ブロックの空中回廊
         b.bricks(94, 98, 11);
         b.coins(94, 98, 7);
         b.q(104, 11, 'power');
         b.enemy('osushi', 102);
-        b.enemy('kuri', 100);
-        b.enemy('kuri', 107);
-        b.enemy('kuri', 110);
+        b.enemy('kiiro', 107);
+        b.enemy('osushi', 110);
 
         // 階段の丘
         b.stairsUp(116, 4);
         b.stairsDown(122, 4);
         b.enemy('lulu', 127);
-        b.enemy('kame', 128);
+        b.enemy('osushi', 129);
         b.pipe(132, 2);
         b.enemy('kiiro', 137);
         b.coins(136, 140, 9);
@@ -68,9 +66,9 @@ export default {
         // ゴール前ラッシュ
         b.bricks(143, 145, 11);
         b.q(144, 7, 'coin');
-        b.enemy('kame', 148);
-        b.enemy('kuri', 152);
-        b.enemy('kuri', 154);
+        b.enemy('osushi', 148);
+        b.enemy('kiiro', 152);
+        b.enemy('osushi', 155);
         b.coins(156, 158, 11);
 
         // ゴール (旗 + 城)

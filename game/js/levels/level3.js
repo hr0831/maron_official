@@ -20,14 +20,13 @@ export default {
         b.row(T.HARD, 25, 28, 10);
         b.coins(25, 28, 8);
         b.row(T.HARD, 32, 35, 12);
-        b.enemy('kame', 33, 11);
+        b.enemy('osushi', 33, 11);
 
         // 小島 1
         b.ground(38, 48);
         b.q(43, 11, 'power');
         b.enemy('kiiro', 41);
-        b.enemy('kuri', 44);
-        b.enemy('kuri', 46);
+        b.enemy('osushi', 44);
 
         // 空中ステップ 2
         b.row(T.HARD, 52, 54, 12);
@@ -35,10 +34,11 @@ export default {
         b.coins(58, 60, 8);
         b.row(T.HARD, 64, 66, 12);
 
-        // 小島 2: 土管とカメ
+        // 小島 2: 土管とルルちゃん
         b.ground(69, 80);
         b.pipe(73, 2);
-        b.enemy('kame', 78);
+        b.enemy('osushi', 78);
+        b.enemy('lulu', 75);
         b.q(76, 10, 'coin');
 
         // 空中ステップ 3 (ジグザグ)
@@ -53,22 +53,21 @@ export default {
         b.bricks(107, 110, 11);
         b.q(108, 11, 'power');
         b.q(110, 7, 'life');
-        b.enemy('kuri', 111);
-        b.enemy('kame', 106);
+        b.enemy('kiiro', 111);
+        b.enemy('osushi', 106);
 
         // 連続ロングジャンプ
         b.row(T.HARD, 118, 121, 12);
         b.row(T.HARD, 124, 127, 12);
-        b.enemy('kuri', 125, 11);
+        b.enemy('osushi', 125, 11);
         b.row(T.HARD, 130, 133, 12);
         b.coins(118, 133, 9);
 
         // 小島 4: 最後の試練
         b.ground(136, 150);
         b.stairsUp(140, 3);
-        b.enemy('kame', 146);
+        b.enemy('kiiro', 146);
         b.enemy('osushi', 143);
-        b.enemy('kuri', 148);
         b.q(144, 8, 'coin');
 
         // ラストの空中回廊

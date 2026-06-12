@@ -23,22 +23,23 @@ export default {
         b.coins(12, 16, 10);
         b.bricks(19, 23, 8);
         b.coins(19, 23, 7);
-        b.enemy('kuri', 18);
-        b.enemy('kuri', 21);
+        b.enemy('kiiro', 18);
+        b.enemy('osushi', 21);
 
         // ハテナとレンガの通路
         b.enemy('kiiro', 26);
         b.q(28, 11, 'power');
         b.bricks(30, 36, 11);
         b.coins(31, 35, 13);
-        b.enemy('kame', 33);
+        b.enemy('osushi', 33);
 
         // 段差のある洞窟内部
         b.row(T.HARD, 40, 44, 14);
         b.row(T.HARD, 42, 44, 13);
         b.coins(40, 44, 11);
-        b.enemy('kuri', 48);
-        b.enemy('kuri', 50);
+        b.enemy('kiiro', 48);
+        b.enemy('osushi', 51);
+        b.enemy('lulu', 42);
         b.pipe(54, 3);
 
         // 谷 1 (60-62): 跳び越える
@@ -47,13 +48,13 @@ export default {
         // 中盤: 高低差ゾーン
         b.bricks(66, 70, 11);
         b.q(68, 7, 'coin');
-        b.enemy('kame', 72);
+        b.enemy('kiiro', 72);
         b.row(T.HARD, 76, 79, 12);
         b.row(T.HARD, 82, 85, 9);
         b.coins(82, 85, 7);
         b.enemy('osushi', 80);
-        b.enemy('kuri', 88);
-        b.enemy('kuri', 91);
+        b.enemy('kiiro', 88);
+        b.enemy('osushi', 91);
         b.q(94, 11, 'life');
         b.enemy('lulu', 96);
 
@@ -65,9 +66,8 @@ export default {
         b.bricks(110, 117, 7);
         b.coins(110, 117, 6);
         b.q(114, 11, 'power');
-        b.enemy('kame', 119);
-        b.enemy('kuri', 123);
-        b.enemy('kuri', 126);
+        b.enemy('osushi', 119);
+        b.enemy('kiiro', 123);
         b.pipe(130, 2);
         b.enemy('osushi', 134);
         b.coins(134, 137, 10);
@@ -76,8 +76,8 @@ export default {
         b.coins(140, 143, 9);
 
         // 出口へ
-        b.enemy('kame', 148);
-        b.enemy('kuri', 151);
+        b.enemy('kiiro', 148);
+        b.enemy('osushi', 151);
         b.bricks(150, 153, 11);
         b.q(152, 11, 'coin');
         b.stairsUp(155, 3);
