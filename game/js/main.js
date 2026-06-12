@@ -383,7 +383,12 @@ class Game {
     }
 
     onBossDefeated() {
-        // 飛んでいるハートを消して勝利演出へ
+        // 全ボスを倒すまで戦闘続行
+        if (this.enemies.some((e) => e.boss && !e.defeated)) {
+            this.sound.oneUp();
+            return;
+        }
+        // 飛んでいる弾を消して勝利演出へ
         this.enemies = this.enemies.filter((e) => !(e instanceof HeartShot));
         this.state = 'bossclear';
         this.stateTimer = 5;
@@ -553,7 +558,7 @@ class Game {
             this.overlayText(c, 'COURSE CLEAR!', 'タイムボーナス獲得!');
         }
         if (this.state === 'bossclear') {
-            this.overlayText(c, '🎀 なかなおり! 🎀', 'ゆいちゃんと なかよくなった!');
+            this.overlayText(c, '🎀 なかなおり! 🎀', 'ゆい・さすけ・ひろやと なかよくなった!');
         }
         if (this.state === 'win') {
             this.overlayText(c, '🎉 ALL CLEAR! 🎉',

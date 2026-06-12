@@ -1,6 +1,6 @@
 import { T } from '../level.js';
 
-// WORLD 1-4: 屋上決戦! ボス「ゆいちゃん」
+// WORLD 1-4: 屋上決戦ハードモード! ボス3人 (ゆい・さすけ・ひろや)
 export default {
     name: 'WORLD 1-4',
     theme: 'night',
@@ -24,7 +24,9 @@ export default {
         // おたすけ: 確定ファイアフラワー
         b.q(7, 11, 'flower');
 
-        // ボス
+        // ボス3人 (ハードモード)
         b.enemy('yui', 48);
+        b.enemy('sasuke', 38);
+        b.enemy('hiroya', 57);
     },
 };

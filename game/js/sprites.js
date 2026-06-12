@@ -405,6 +405,79 @@ const YUI_1 = [...YUI_TOP, ...YUI_EYES_OPEN, ...YUI_MID, ...YUI_LEGS_1];
 const YUI_2 = [...YUI_TOP, ...YUI_EYES_OPEN, ...YUI_MID, ...YUI_LEGS_2];
 const YUI_DIZZY = [...YUI_TOP, ...YUI_EYES_CLOSED, ...YUI_MID, ...YUI_LEGS_1];
 
+// ---- ボス: さすけくん & ひろやくん (センター分けの男の子) ----
+const BOY_HEAD = [
+    '.......KKKKKKKKKK.......',
+    '.....KKHHHHHHHHHHKK.....',
+    '....KHHHHHHKKHHHHHHK....',
+    '...KHHHHHKSSSSKHHHHHK...',
+    '...KHHHKSSSSSSSSKHHHK...',
+    '...KHHKSSSSSSSSSSKHHK...',
+];
+const BOY_EYES_OPEN = [
+    '..KHHKSSKKSSSSKKSSKHHK..',
+    '..KHHKSSKKSSSSKKSSKHHK..',
+];
+const BOY_EYES_CLOSED = [
+    '..KHHKSSSSSSSSSSSSKHHK..',
+    '..KHHKSSKKSSSSKKSSKHHK..',
+];
+const BOY_FACE_BOTTOM = [
+    '...KSSSSSSSSSSSSSSSSK...',
+    '...KSSSSSSKMMKSSSSSSK...',
+    '....KSSSSSSSSSSSSSSK....',
+    '.....KKSSSSSSSSSSKK.....',
+];
+// さすけくん: 青いトレーナー
+const SASUKE_BODY = [
+    '....KKKKBBBBBBBBKKKK....',
+    '...KBBKBBBBBBBBBBKBBK...',
+    '..KBBKBBBBBBBBBBBBKBBK..',
+    '..KBBKBBBBBBBBBBBBKBBK..',
+    '..KSSKBBBBBBBBBBBBKSSK..',
+    '..KKKBBBBBBBBBBBBBBKKK..',
+    '....KBBBBBBBBBBBBBBK....',
+    '....KBBBBBBBBBBBBBBK....',
+    '....KKKKKKKKKKKKKKKK....',
+];
+// ひろやくん: スーツ (白シャツ + ネクタイ)
+const HIROYA_BODY = [
+    '....KKKKNNNNNNNNKKKK....',
+    '...KNNKNNNWWWWNNNKNNK...',
+    '..KNNKNNNWTTWNNNNKNNK...',
+    '..KNNKNNNWTTWNNNNKNNK...',
+    '..KSSKNNNNTTNNNNNKSSK...',
+    '..KKKNNNNNNNNNNNNNNKKK..',
+    '....KNNNNNNNNNNNNNNK....',
+    '....KNNNNNNNNNNNNNNK....',
+    '....KKKKKKKKKKKKKKKK....',
+];
+const BOY_LEGS_1 = [
+    '.....KPPPK....KPPPK.....',
+    '.....KPPPK....KPPPK.....',
+    '.....KPPPK....KPPPK.....',
+    '....KZZZZK....KZZZZK....',
+    '....KKKKKK....KKKKKK....',
+];
+const BOY_LEGS_2 = [
+    '....KPPPK......KPPPK....',
+    '...KPPPK........KPPPK...',
+    '...KPPPK........KPPPK...',
+    '..KZZZZK........KZZZZK..',
+    '..KKKKKK........KKKKKK..',
+];
+const SASUKE_PAL = {
+    K: '#1a1208', H: '#241a10', S: '#ffd9b8', M: '#c05050',
+    B: '#2858c8', P: '#3a3f55', Z: '#f0f0f0',
+};
+const HIROYA_PAL = {
+    K: '#1a1208', H: '#3a2c1c', S: '#ffd9b8', M: '#c05050',
+    N: '#32384a', W: '#ffffff', T: '#c03048', P: '#32384a', Z: '#181818',
+};
+function boy(body, legs, eyes, pal) {
+    return px([...BOY_HEAD, ...eyes, ...BOY_FACE_BOTTOM, ...body, ...legs], pal, 3);
+}
+
 function build() {
     const dogSmallPal = DOG_PAL, dogFirePal = DOG_FIRE_PAL;
     const make = (img) => ({ right: img, left: flipped(img) });    return {
@@ -445,6 +518,12 @@ function build() {
         yui1: make(px(YUI_1, YUI_PAL, 3)),
         yui2: make(px(YUI_2, YUI_PAL, 3)),
         yuiDizzy: make(px(YUI_DIZZY, YUI_PAL, 3)),
+        sasuke1: make(boy(SASUKE_BODY, BOY_LEGS_1, BOY_EYES_OPEN, SASUKE_PAL)),
+        sasuke2: make(boy(SASUKE_BODY, BOY_LEGS_2, BOY_EYES_OPEN, SASUKE_PAL)),
+        sasukeDizzy: make(boy(SASUKE_BODY, BOY_LEGS_1, BOY_EYES_CLOSED, SASUKE_PAL)),
+        hiroya1: make(boy(HIROYA_BODY, BOY_LEGS_1, BOY_EYES_OPEN, HIROYA_PAL)),
+        hiroya2: make(boy(HIROYA_BODY, BOY_LEGS_2, BOY_EYES_OPEN, HIROYA_PAL)),
+        hiroyaDizzy: make(boy(HIROYA_BODY, BOY_LEGS_1, BOY_EYES_CLOSED, HIROYA_PAL)),
         mushroom: px(MUSHROOM, ITEM_PAL),
         oneup: px(MUSHROOM, ONEUP_PAL),
         flower: px(FLOWER, ITEM_PAL),
