@@ -36,6 +36,13 @@ class Game {
         this.bumps = [];         // 叩かれてバウンドするブロック
         this.best = Number(localStorage.getItem('maron-best') || 0);
 
+        // デバッグ: URL に ?stage=4 を付けるとそのステージから開始できる
+        this.startLevel = 0;
+        try {
+            const s = parseInt(new URLSearchParams(window.location.search).get('stage'), 10);
+            if (s >= 1 && s <= LEVELS.length) this.startLevel = s - 1;
+        } catch { /* location が無い環境では無視 */ }
+
         // ブラウザの自動再生制限の解除はユーザー操作イベント内で行う
         const unlock = () => this.sound.init();
         window.addEventListener('keydown', unlock);
@@ -48,12 +55,12 @@ class Game {
     }
 
     // ---------- 進行管理 ----------
-    newGame() {
+    newGame(startLevel = this.startLevel) {
         this.score = 0;
         this.coins = 0;
         this.lives = 3;
-        this.levelIndex = 0;
-        this.loadLevel(0);
+        this.levelIndex = startLevel;
+        this.loadLevel(startLevel);
     }
 
     loadLevel(i) {
@@ -148,12 +155,21 @@ class Game {
         if (this.input.justPressed('mute')) this.sound.toggleMute();
 
         switch (this.state) {
-            case 'title':
-                if (this.input.justPressed('start') || this.input.justPressed('jump')) {
+            case 'title': {
+                // デバッグ/ステージセレクト: 1〜4 キーで直接そのステージへ
+                let selected = -1;
+                for (let i = 0; i < LEVELS.length; i++) {
+                    if (this.input.justPressed('lv' + (i + 1))) selected = i;
+                }
+                if (selected >= 0) {
+                    this.sound.init();
+                    this.newGame(selected);
+                } else if (this.input.justPressed('start') || this.input.justPressed('jump')) {
                     this.sound.init();
                     this.newGame();
                 }
                 break;
+            }
             case 'playing':
                 this.updatePlaying(dt);
                 break;
@@ -608,6 +624,10 @@ class Game {
         c.fillStyle = '#ffffffcc';
         c.font = '15px monospace';
         c.fillText(`BEST SCORE  ${String(this.best).padStart(7, '0')}`, w / 2, h - 92);
+        c.fillStyle = '#ffffff88';
+        c.font = '13px monospace';
+        const stageHint = this.startLevel > 0 ? `▶ STAGE 1-${this.startLevel + 1} から開始` : '1〜4 キーでステージ選択 (4 = ボス戦)';
+        c.fillText(stageHint, w / 2, h - 70);
     }
 
     // ---------- メインループ ----------
