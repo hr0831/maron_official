@@ -27,6 +27,7 @@ export default {
         b.enemy('kuri', 21);
 
         // ハテナとレンガの通路
+        b.enemy('kiiro', 26);
         b.q(28, 11, 'power');
         b.bricks(30, 36, 11);
         b.coins(31, 35, 13);
@@ -50,6 +51,7 @@ export default {
         b.row(T.HARD, 76, 79, 12);
         b.row(T.HARD, 82, 85, 9);
         b.coins(82, 85, 7);
+        b.enemy('osushi', 80);
         b.enemy('kuri', 88);
         b.enemy('kuri', 91);
         b.q(94, 11, 'life');
@@ -66,6 +68,7 @@ export default {
         b.enemy('kuri', 123);
         b.enemy('kuri', 126);
         b.pipe(130, 2);
+        b.enemy('osushi', 134);
         b.coins(134, 137, 10);
 
         // 谷 3 (140-143)

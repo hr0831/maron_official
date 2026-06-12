@@ -171,8 +171,126 @@ export class Kame extends Enemy {
     }
 }
 
+// きいろちゃん: ぴょんぴょん跳ねながら歩く金色ハムスター
+export class Kiiro extends Enemy {
+    constructor(x, y) {
+        super(x, y, 26, 26);
+        this.speed = 55;
+        this.squashed = 0;
+        this.hopTimer = 1 + Math.random();
+    }
+
+    update(dt, level) {
+        this.anim += dt;
+        if (this.squashed > 0) {
+            this.squashed -= dt;
+            if (this.squashed <= 0) this.removed = true;
+            return;
+        }
+        const res = this.baseUpdate(dt, level);
+        if (!res) return;
+        this.vx = this.speed * this.dir;
+        if (res.wall) this.dir *= -1;
+        if (res.ground || onGround(this, level)) {
+            this.hopTimer -= dt;
+            if (this.hopTimer <= 0) {
+                this.vy = -430;
+                this.hopTimer = 1 + Math.random() * 0.9;
+            }
+        }
+        if (this.y > level.pixelHeight + 100) this.removed = true;
+    }
+
+    stomp(game) {
+        this.alive = false;
+        this.squashed = 0.5;
+        this.vx = 0;
+        game.sound.stomp();
+        game.addScore(100, this.x, this.y);
+    }
+
+    render(c, camX) {
+        let img;
+        if (this.squashed > 0) img = sprites.kiiroFlat.right;
+        else if (this.vy < -50) img = sprites.kiiro2.right;
+        else img = (Math.floor(this.anim * 6) % 2 === 0) ? sprites.kiiro1.right : sprites.kiiro2.right;
+        this.drawImg(c, img, camX);
+    }
+}
+
+// おすしちゃん: ちょこちょこ走って止まるを繰り返す白ハムスター
+export class Osushi extends Enemy {
+    constructor(x, y) {
+        super(x, y, 26, 24);
+        this.squashed = 0;
+        this.state = 'pause';     // pause | dash
+        this.timer = 0.5 + Math.random() * 0.4;
+        this.speed = 185;
+    }
+
+    update(dt, level, player) {
+        this.anim += dt;
+        if (this.squashed > 0) {
+            this.squashed -= dt;
+            if (this.squashed <= 0) this.removed = true;
+            return;
+        }
+        const res = this.baseUpdate(dt, level);
+        if (!res) return;
+
+        if (this.state === 'dash') {
+            this.vx = this.speed * this.dir;
+            if (res.wall) this.dir *= -1;
+            // 崖の手前で引き返す
+            if (res.ground || onGround(this, level)) {
+                const aheadX = this.dir > 0 ? this.x + this.w + 2 : this.x - 2;
+                const col = Math.floor(aheadX / TS);
+                const row = Math.floor((this.y + this.h + 2) / TS);
+                if (!level.isSolid(col, row)) this.dir *= -1;
+            }
+            this.timer -= dt;
+            if (this.timer <= 0) {
+                this.state = 'pause';
+                this.vx = 0;
+                this.timer = 0.35 + Math.random() * 0.35;
+            }
+        } else {
+            this.vx = 0;
+            this.timer -= dt;
+            if (this.timer <= 0) {
+                // 近くにいるプレイヤーの方へちょこちょこ走る
+                if (player && Math.abs(player.x - this.x) < 340) {
+                    this.dir = player.x > this.x ? 1 : -1;
+                }
+                this.state = 'dash';
+                this.timer = 0.45 + Math.random() * 0.25;
+            }
+        }
+        if (this.y > level.pixelHeight + 100) this.removed = true;
+    }
+
+    stomp(game) {
+        this.alive = false;
+        this.squashed = 0.5;
+        this.vx = 0;
+        game.sound.stomp();
+        game.addScore(150, this.x, this.y);
+    }
+
+    render(c, camX) {
+        let img;
+        if (this.squashed > 0) img = sprites.osushiFlat.right;
+        else if (this.state === 'dash') {
+            img = (Math.floor(this.anim * 12) % 2 === 0) ? sprites.osushi1.right : sprites.osushi2.right;
+        } else img = sprites.osushi1.right;
+        this.drawImg(c, img, camX);
+    }
+}
+
 export function createEnemy(type, x, y) {
     if (type === 'kuri') return new Kuri(x, y);
     if (type === 'kame') return new Kame(x, y);
+    if (type === 'kiiro') return new Kiiro(x, y);
+    if (type === 'osushi') return new Osushi(x, y);
     return null;
 }

@@ -550,10 +550,99 @@ const FLOWER = [
     '................',
 ];
 
+// ---- 敵: きいろちゃん (金色ハムスター・ぴょんぴょん跳ねる) ----
+const KIIRO_PAL = { K: '#1a1208', Y: '#e8c060', L: '#f8eed4', P: '#f0a8b8' };
+const KIIRO_1 = [
+    '...KK......KK...',
+    '..KPYK....KYPK..',
+    '..KYYKKKKKKYYK..',
+    '.KYYYYYYYYYYYYK.',
+    '.KYYYYYYYYYYYYK.',
+    'KYYKKYYYYYYKKYYK',
+    'KYYKKYYYYYYKKYYK',
+    'KYYYYYYPPYYYYYYK',
+    'KYLLLYYYYYYLLLYK',
+    'KYLLLLLYYLLLLLYK',
+    'KYLLLLLLLLLLLLYK',
+    '.KYLLLLLLLLLLYK.',
+    '..KKLLLLLLLLKK..',
+    '...KPPK..KPPK...',
+    '...KPPK..KPPK...',
+    '...KKK....KKK...',
+];
+const KIIRO_2 = [
+    ...KIIRO_1.slice(0, 13),
+    '....KPPKKPPK....',
+    '....KPPKKPPK....',
+    '....KKK..KKK....',
+];
+const KIIRO_FLAT = [
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+    '.....KKKKKK.....',
+    '...KKYYYYYYKK...',
+    '.KKYYKKYYKKYYKK.',
+    'KYYLLLLLLLLLLYYK',
+    'KPPPPPPPPPPPPPPK',
+    '.KKKKKKKKKKKKKK.',
+];
+
+// ---- 敵: おすしちゃん (白ハムスター・ハートクッキー持ちでちょこちょこ走る) ----
+const OSUSHI_PAL = { K: '#1a1208', W: '#f6f3ee', P: '#f0a8b8', C: '#e0b888', R: '#e03030', G: '#d8d4cc' };
+const OSUSHI_1 = [
+    '...KK......KK...',
+    '..KPWK....KWPK..',
+    '..KWWKKKKKKWWK..',
+    '.KWWWWWWWWWWWWK.',
+    '.KWWWWWWWWWWWWK.',
+    'KWWKKWWWWWWKKWWK',
+    'KWWKKWWWWWWKKWWK',
+    'KWWWWWWPPWWWWWWK',
+    'KWWWWWCCCCWWWWWK',
+    'KWWWWWCRRCWWWWWK',
+    'KWWWWWCCCCWWWWWK',
+    '.KWWWWWWWWWWWWK.',
+    '..KKWWWWWWWWKK..',
+    '...KPPK..KPPK...',
+    '...KPPK..KPPK...',
+    '...KKK....KKK...',
+];
+const OSUSHI_2 = [
+    ...OSUSHI_1.slice(0, 13),
+    '....KPPKKPPK....',
+    '....KPPKKPPK....',
+    '....KKK..KKK....',
+];
+const OSUSHI_FLAT = [
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+    '................',
+    '.....KKKKKK.....',
+    '...KKWWWWWWKK...',
+    '.KKWWKKWWKKWWKK.',
+    'KWWGGGGGGGGGGWWK',
+    'KPPPPPPPPPPPPPPK',
+    '.KKKKKKKKKKKKKK.',
+];
+
 function build() {
     const dogSmallPal = DOG_PAL, dogFirePal = DOG_FIRE_PAL;
-    const make = (img) => ({ right: img, left: flipped(img) });
-    return {
+    const make = (img) => ({ right: img, left: flipped(img) });    return {
         dog: {
             small: {
                 idle: make(dogSmall(LEGS_IDLE, dogSmallPal)),
@@ -580,6 +669,12 @@ function build() {
         kame1: make(px(KAME_1, KAME_PAL)),
         kame2: make(px(KAME_2, KAME_PAL)),
         shell: make(px(SHELL, KAME_PAL)),
+        kiiro1: make(px(KIIRO_1, KIIRO_PAL)),
+        kiiro2: make(px(KIIRO_2, KIIRO_PAL)),
+        kiiroFlat: make(px(KIIRO_FLAT, KIIRO_PAL)),
+        osushi1: make(px(OSUSHI_1, OSUSHI_PAL)),
+        osushi2: make(px(OSUSHI_2, OSUSHI_PAL)),
+        osushiFlat: make(px(OSUSHI_FLAT, OSUSHI_PAL)),
         mushroom: px(MUSHROOM, ITEM_PAL),
         oneup: px(MUSHROOM, ONEUP_PAL),
         flower: px(FLOWER, ITEM_PAL),
@@ -1445,9 +1540,127 @@ class Kame extends Enemy {
     }
 }
 
+// きいろちゃん: ぴょんぴょん跳ねながら歩く金色ハムスター
+class Kiiro extends Enemy {
+    constructor(x, y) {
+        super(x, y, 26, 26);
+        this.speed = 55;
+        this.squashed = 0;
+        this.hopTimer = 1 + Math.random();
+    }
+
+    update(dt, level) {
+        this.anim += dt;
+        if (this.squashed > 0) {
+            this.squashed -= dt;
+            if (this.squashed <= 0) this.removed = true;
+            return;
+        }
+        const res = this.baseUpdate(dt, level);
+        if (!res) return;
+        this.vx = this.speed * this.dir;
+        if (res.wall) this.dir *= -1;
+        if (res.ground || onGround(this, level)) {
+            this.hopTimer -= dt;
+            if (this.hopTimer <= 0) {
+                this.vy = -430;
+                this.hopTimer = 1 + Math.random() * 0.9;
+            }
+        }
+        if (this.y > level.pixelHeight + 100) this.removed = true;
+    }
+
+    stomp(game) {
+        this.alive = false;
+        this.squashed = 0.5;
+        this.vx = 0;
+        game.sound.stomp();
+        game.addScore(100, this.x, this.y);
+    }
+
+    render(c, camX) {
+        let img;
+        if (this.squashed > 0) img = sprites.kiiroFlat.right;
+        else if (this.vy < -50) img = sprites.kiiro2.right;
+        else img = (Math.floor(this.anim * 6) % 2 === 0) ? sprites.kiiro1.right : sprites.kiiro2.right;
+        this.drawImg(c, img, camX);
+    }
+}
+
+// おすしちゃん: ちょこちょこ走って止まるを繰り返す白ハムスター
+class Osushi extends Enemy {
+    constructor(x, y) {
+        super(x, y, 26, 24);
+        this.squashed = 0;
+        this.state = 'pause';     // pause | dash
+        this.timer = 0.5 + Math.random() * 0.4;
+        this.speed = 185;
+    }
+
+    update(dt, level, player) {
+        this.anim += dt;
+        if (this.squashed > 0) {
+            this.squashed -= dt;
+            if (this.squashed <= 0) this.removed = true;
+            return;
+        }
+        const res = this.baseUpdate(dt, level);
+        if (!res) return;
+
+        if (this.state === 'dash') {
+            this.vx = this.speed * this.dir;
+            if (res.wall) this.dir *= -1;
+            // 崖の手前で引き返す
+            if (res.ground || onGround(this, level)) {
+                const aheadX = this.dir > 0 ? this.x + this.w + 2 : this.x - 2;
+                const col = Math.floor(aheadX / TS);
+                const row = Math.floor((this.y + this.h + 2) / TS);
+                if (!level.isSolid(col, row)) this.dir *= -1;
+            }
+            this.timer -= dt;
+            if (this.timer <= 0) {
+                this.state = 'pause';
+                this.vx = 0;
+                this.timer = 0.35 + Math.random() * 0.35;
+            }
+        } else {
+            this.vx = 0;
+            this.timer -= dt;
+            if (this.timer <= 0) {
+                // 近くにいるプレイヤーの方へちょこちょこ走る
+                if (player && Math.abs(player.x - this.x) < 340) {
+                    this.dir = player.x > this.x ? 1 : -1;
+                }
+                this.state = 'dash';
+                this.timer = 0.45 + Math.random() * 0.25;
+            }
+        }
+        if (this.y > level.pixelHeight + 100) this.removed = true;
+    }
+
+    stomp(game) {
+        this.alive = false;
+        this.squashed = 0.5;
+        this.vx = 0;
+        game.sound.stomp();
+        game.addScore(150, this.x, this.y);
+    }
+
+    render(c, camX) {
+        let img;
+        if (this.squashed > 0) img = sprites.osushiFlat.right;
+        else if (this.state === 'dash') {
+            img = (Math.floor(this.anim * 12) % 2 === 0) ? sprites.osushi1.right : sprites.osushi2.right;
+        } else img = sprites.osushi1.right;
+        this.drawImg(c, img, camX);
+    }
+}
+
 function createEnemy(type, x, y) {
     if (type === 'kuri') return new Kuri(x, y);
     if (type === 'kame') return new Kame(x, y);
+    if (type === 'kiiro') return new Kiiro(x, y);
+    if (type === 'osushi') return new Osushi(x, y);
     return null;
 }
 
@@ -1666,6 +1879,7 @@ const LEVEL1_DATA = {
         b.enemy('kuri', 36);
         b.enemy('kuri', 43);
         b.enemy('kame', 53);
+        b.enemy('kiiro', 58);
         b.coins(50, 53, 10);
 
         // 最初の谷 (70-72) の先
@@ -1680,6 +1894,7 @@ const LEVEL1_DATA = {
         b.bricks(94, 98, 11);
         b.coins(94, 98, 7);
         b.q(104, 11, 'power');
+        b.enemy('osushi', 102);
         b.enemy('kuri', 100);
         b.enemy('kuri', 107);
         b.enemy('kuri', 110);
@@ -1689,6 +1904,7 @@ const LEVEL1_DATA = {
         b.stairsDown(122, 4);
         b.enemy('kame', 128);
         b.pipe(132, 2);
+        b.enemy('kiiro', 137);
         b.coins(136, 140, 9);
 
         // ゴール前ラッシュ
@@ -1733,6 +1949,7 @@ const LEVEL2_DATA = {
         b.enemy('kuri', 21);
 
         // ハテナとレンガの通路
+        b.enemy('kiiro', 26);
         b.q(28, 11, 'power');
         b.bricks(30, 36, 11);
         b.coins(31, 35, 13);
@@ -1756,6 +1973,7 @@ const LEVEL2_DATA = {
         b.row(T.HARD, 76, 79, 12);
         b.row(T.HARD, 82, 85, 9);
         b.coins(82, 85, 7);
+        b.enemy('osushi', 80);
         b.enemy('kuri', 88);
         b.enemy('kuri', 91);
         b.q(94, 11, 'life');
@@ -1772,6 +1990,7 @@ const LEVEL2_DATA = {
         b.enemy('kuri', 123);
         b.enemy('kuri', 126);
         b.pipe(130, 2);
+        b.enemy('osushi', 134);
         b.coins(134, 137, 10);
 
         // 谷 3 (140-143)
@@ -1815,6 +2034,7 @@ const LEVEL3_DATA = {
         // 小島 1
         b.ground(38, 48);
         b.q(43, 11, 'power');
+        b.enemy('kiiro', 41);
         b.enemy('kuri', 44);
         b.enemy('kuri', 46);
 
@@ -1856,6 +2076,7 @@ const LEVEL3_DATA = {
         b.ground(136, 150);
         b.stairsUp(140, 3);
         b.enemy('kame', 146);
+        b.enemy('osushi', 143);
         b.enemy('kuri', 148);
         b.q(144, 8, 'coin');
 
@@ -1866,6 +2087,7 @@ const LEVEL3_DATA = {
 
         // ゴール大陸
         b.ground(166, 197);
+        b.enemy('kiiro', 171);
         b.goal(184);
     },
 };
@@ -2113,7 +2335,7 @@ class Game {
                 e.active = e.x < this.camera.x + this.camera.viewW + 64;
                 continue;
             }
-            e.update(dt, this.level);
+            e.update(dt, this.level, p);
             if (e.removed || !e.alive || p.dead) continue;
             if (!this.overlap(p, e)) continue;
 
