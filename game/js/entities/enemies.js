@@ -331,12 +331,13 @@ export class Lulu extends Enemy {
 
 // ゆいちゃんが投げるハート (放物線を描いて飛んでくる)
 export class HeartShot extends Enemy {
-    constructor(x, y, vx, beam = false) {
+    constructor(x, y, vx, beam = false, style = 'heart') {
         super(x / TS * TS, y, 18, 18);
         this.x = x;
         this.y = y;
         this.vx = vx;
-        this.beam = beam;             // ハートビーム: まっすぐ高速で飛ぶ
+        this.beam = beam;             // ビーム: まっすぐ高速で飛ぶ
+        this.style = style;           // heart | ball | paper
         this.vy = beam ? 0 : -360;
         this.life = 2.4;
         this.active = true;
@@ -374,35 +375,96 @@ export class HeartShot extends Enemy {
         game.addScore(100, this.x, this.y);
     }
 
+    drawOne(c, cx, cy, size, strong) {
+        if (this.style === 'ball') {
+            // さすけくんの青いボール
+            c.fillStyle = strong ? '#1c46c8' : '#3a6ae8';
+            c.beginPath();
+            c.arc(cx, cy, size * 0.7, 0, Math.PI * 2);
+            c.fill();
+            c.fillStyle = '#ffffffaa';
+            c.beginPath();
+            c.arc(cx - size * 0.22, cy - size * 0.22, size * 0.25, 0, Math.PI * 2);
+            c.fill();
+        } else if (this.style === 'paper') {
+            // ひろやくんの書類 (ビームは紙飛行機)
+            c.save();
+            c.translate(cx, cy);
+            if (this.beam) {
+                c.fillStyle = '#f8f8f4';
+                c.beginPath();
+                const d = Math.sign(this.vx) || 1;
+                c.moveTo(d * size, 0);
+                c.lineTo(-d * size * 0.8, -size * 0.6);
+                c.lineTo(-d * size * 0.4, 0);
+                c.lineTo(-d * size * 0.8, size * 0.6);
+                c.fill();
+            } else {
+                c.rotate(this.anim * 6);
+                c.fillStyle = '#f8f8f4';
+                c.fillRect(-size * 0.6, -size * 0.75, size * 1.2, size * 1.5);
+                c.fillStyle = '#8a8a96';
+                c.fillRect(-size * 0.4, -size * 0.45, size * 0.8, size * 0.14);
+                c.fillRect(-size * 0.4, -size * 0.1, size * 0.8, size * 0.14);
+            }
+            c.restore();
+        } else {
+            drawHeart(c, cx, cy, size, strong ? '#ff2d6a' : undefined);
+        }
+    }
+
     render(c, camX) {
         const cx = this.x + this.w / 2 - camX;
         const cy = this.y + this.h / 2;
         if (this.beam) {
             // 残像つきのビーム表現
             c.globalAlpha = 0.25;
-            drawHeart(c, cx - Math.sign(this.vx) * 26, cy, 10);
+            this.drawOne(c, cx - Math.sign(this.vx) * 26, cy, 10, false);
             c.globalAlpha = 0.5;
-            drawHeart(c, cx - Math.sign(this.vx) * 13, cy, 11);
+            this.drawOne(c, cx - Math.sign(this.vx) * 13, cy, 11, false);
             c.globalAlpha = 1;
-            drawHeart(c, cx, cy, 13, '#ff2d6a');
+            this.drawOne(c, cx, cy, 13, true);
         } else {
             const wob = Math.sin(this.anim * 14) * 2;
-            drawHeart(c, cx, cy + wob, 11);
+            this.drawOne(c, cx, cy + wob, 11, false);
         }
     }
 }
 
-// ボス: ゆいちゃん (ボブヘアの女の子)。3回踏むと なかなおり できる
-export class Yui extends Enemy {
-    constructor(x, y) {
-        super(x, y, 56, 86);
+// ボスたちの性格設定
+const BOSS_KINDS = {
+    yui: {
+        name: 'ゆい', sprites: ['yui1', 'yui2', 'yuiDizzy'], h: 86,
+        speed: 80, rage: 40, jumpMin: 1.8, jumpVar: 1.2,
+        throwMin: 2.0, throwVar: 0.7, beamEvery: 3,
+        style: 'heart', shotSpeed: 200, beamSpeed: 390,
+    },
+    sasuke: {
+        name: 'さすけ', sprites: ['sasuke1', 'sasuke2', 'sasukeDizzy'], h: 80,
+        speed: 115, rage: 45, jumpMin: 1.1, jumpVar: 0.9,
+        throwMin: 2.6, throwVar: 0.8, beamEvery: 4,
+        style: 'ball', shotSpeed: 220, beamSpeed: 420,
+    },
+    hiroya: {
+        name: 'ひろや', sprites: ['hiroya1', 'hiroya2', 'hiroyaDizzy'], h: 80,
+        speed: 60, rage: 30, jumpMin: 2.5, jumpVar: 1.0,
+        throwMin: 1.5, throwVar: 0.5, beamEvery: 3,
+        style: 'paper', shotSpeed: 190, beamSpeed: 360,
+    },
+};
+
+// ボス: 3回踏むと なかなおり できる
+export class Boss extends Enemy {
+    constructor(x, y, kind = 'yui') {
+        super(x, y, 56, BOSS_KINDS[kind].h);
+        this.kind = BOSS_KINDS[kind];
         this.boss = true;
         this.hp = 3;
         this.maxHp = 3;
         this.invuln = 0;
         this.defeated = false;
         this.jumpTimer = 2;
-        this.throwTimer = 1.2;
+        this.throwTimer = 1.2 + Math.random() * 0.8;
         this.attackCount = 0;
         this.fireHits = 0;
         this.dir = -1;
@@ -420,8 +482,9 @@ export class Yui extends Enemy {
         }
 
         // 踏まれた直後はひるんで立ち止まる (逃げる隙を作る)
+        const k = this.kind;
         const stunned = this.invuln > 0;
-        const speed = 80 + (this.maxHp - this.hp) * 40;  // 怒るほど速くなる
+        const speed = k.speed + (this.maxHp - this.hp) * k.rage;  // 怒るほど速くなる
         if (player && !stunned) this.dir = player.x + player.w / 2 > this.x + this.w / 2 ? 1 : -1;
         this.vx = stunned ? 0 : speed * this.dir;
         this.vy = Math.min(this.vy + 2200 * dt, 900);
@@ -431,24 +494,25 @@ export class Yui extends Enemy {
         this.jumpTimer -= dt;
         if (grounded && !stunned && this.jumpTimer <= 0) {
             this.vy = -580;
-            this.jumpTimer = 1.8 + Math.random() * 1.2;
+            this.jumpTimer = k.jumpMin + Math.random() * k.jumpVar;
         }
 
-        // プレイヤーが離れているとハート攻撃 (3回に1回はハートビーム)
+        // プレイヤーが離れていると飛び道具攻撃 (数回に1回はビーム)
         this.throwTimer -= dt;
         if (game && player && !stunned && this.throwTimer <= 0 &&
             Math.abs(player.x - this.x) > 120) {
-            this.throwTimer = 2.0 + Math.random() * 0.7;
+            this.throwTimer = k.throwMin + Math.random() * k.throwVar;
             this.attackCount++;
             const dir = player.x > this.x ? 1 : -1;
-            if (this.attackCount % 3 === 0 || this.hp <= 1) {
-                // ハートビーム: プレイヤーの高さへまっすぐ高速で飛ぶ
+            if (this.attackCount % k.beamEvery === 0 || this.hp <= 1) {
+                // ビーム: プレイヤーの高さへまっすぐ高速で飛ぶ
                 game.enemies.push(new HeartShot(
-                    this.x + this.w / 2, this.y + 30, dir * 390, true));
+                    this.x + this.w / 2, this.y + 30, dir * k.beamSpeed, true, k.style));
                 game.sound.fireball();
             } else {
-                const vx = dir * (200 + Math.random() * 60);
-                game.enemies.push(new HeartShot(this.x + this.w / 2, this.y + 6, vx));
+                const vx = dir * (k.shotSpeed + Math.random() * 60);
+                game.enemies.push(new HeartShot(
+                    this.x + this.w / 2, this.y + 6, vx, false, k.style));
                 game.sound.kick();
             }
         }
@@ -484,14 +548,16 @@ export class Yui extends Enemy {
     }
 
     render(c, camX, time) {
-        // 被弾中は点滅
-        if (this.invuln > 0 && !this.defeated && Math.floor(this.anim * 12) % 2 === 0) return;
-        let img;
-        if (this.defeated) img = sprites.yuiDizzy.right;
-        else img = (Math.floor(this.anim * 7) % 2 === 0) ? sprites.yui1.right : sprites.yui2.right;
-        this.drawImg(c, img, camX);
-
+        const k = this.kind;
         const cx = this.x + this.w / 2 - camX;
+        const blink = this.invuln > 0 && !this.defeated && Math.floor(this.anim * 12) % 2 === 0;
+        if (!blink) {
+            let img;
+            if (this.defeated) img = sprites[k.sprites[2]].right;
+            else img = (Math.floor(this.anim * 7) % 2 === 0) ? sprites[k.sprites[0]].right : sprites[k.sprites[1]].right;
+            this.drawImg(c, img, camX);
+        }
+
         if (this.defeated) {
             // 目を回している星
             for (let i = 0; i < 3; i++) {
@@ -508,6 +574,17 @@ export class Yui extends Enemy {
                     i < this.hp ? '#ff4060' : '#00000033');
             }
         }
+
+        // 名前表示
+        c.save();
+        c.font = 'bold 13px monospace';
+        c.textAlign = 'center';
+        c.textBaseline = 'bottom';
+        c.fillStyle = 'rgba(0,0,0,0.55)';
+        c.fillText(k.name, cx + 1, this.y - 27);
+        c.fillStyle = this.defeated ? '#aaffcc' : '#ffffff';
+        c.fillText(k.name, cx, this.y - 28);
+        c.restore();
     }
 }
 
@@ -517,6 +594,6 @@ export function createEnemy(type, x, y) {
     if (type === 'kiiro') return new Kiiro(x, y);
     if (type === 'osushi') return new Osushi(x, y);
     if (type === 'lulu') return new Lulu(x, y);
-    if (type === 'yui') return new Yui(x, y);
+    if (type === 'yui' || type === 'sasuke' || type === 'hiroya') return new Boss(x, y, type);
     return null;
 }
